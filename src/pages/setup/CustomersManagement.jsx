@@ -35,20 +35,21 @@ import {
   PopoverCloseButton,
   VStack,
   Portal,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { GiChoice } from 'react-icons/gi'
-import { FiSearch } from 'react-icons/fi'
-import { RiAddFill } from 'react-icons/ri'
-import PageScroll from '../../utils/PageScroll'
-import request from '../../services/ApiClient'
-import { ToastComponent } from '../../components/Toast'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { decodeUser } from '../../services/decode-user'
+  Image,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { AiTwotoneEdit } from "react-icons/ai";
+import { GiChoice } from "react-icons/gi";
+import { FiSearch } from "react-icons/fi";
+import { RiAddFill } from "react-icons/ri";
+import PageScroll from "../../utils/PageScroll";
+import request from "../../services/ApiClient";
+import { ToastComponent } from "../../components/Toast";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -57,32 +58,32 @@ import {
   PaginationPrevious,
   PaginationContainer,
   PaginationPageGroup,
-} from '@ajna/pagination'
+} from "@ajna/pagination";
 
 const CustomersManagement = () => {
-  const [customers, setCustomers] = useState([])
-  const [editData, setEditData] = useState([])
-  const [status, setStatus] = useState(true)
-  const [search, setSearch] = useState('')
-  const toast = useToast()
-  const currentUser = decodeUser()
+  const [customers, setCustomers] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
+  const toast = useToast();
+  const currentUser = decodeUser();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [pageTotal, setPageTotal] = useState(undefined)
-  const [disableEdit, setDisableEdit] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageTotal, setPageTotal] = useState(undefined);
+  const [disableEdit, setDisableEdit] = useState(false);
 
   // FETCH API CUSTOMER:
   const fetchCustomerApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `Customer/GetAllCustomerWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`,
-    )
+      `Customer/GetAllCustomerWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+    );
 
-    return response.data
-  }
+    return response.data;
+  };
 
   //PAGINATION
-  const outerLimit = 2
-  const innerLimit = 2
+  const outerLimit = 2;
+  const innerLimit = 2;
   const {
     currentPage,
     setCurrentPage,
@@ -97,93 +98,93 @@ const CustomersManagement = () => {
       inner: innerLimit,
     },
     initialState: { currentPage: 1, pageSize: 5 },
-  })
+  });
 
   const handlePageChange = (nextPage) => {
-    setCurrentPage(nextPage)
-  }
+    setCurrentPage(nextPage);
+  };
 
   const handlePageSizeChange = (e) => {
-    const pageSize = Number(e.target.value)
-    setPageSize(pageSize)
-  }
+    const pageSize = Number(e.target.value);
+    setPageSize(pageSize);
+  };
 
   //STATUS
   const statusHandler = (data) => {
-    setStatus(data)
-  }
+    setStatus(data);
+  };
 
   const changeStatusHandler = (id, isActive) => {
-    let routeLabel
+    let routeLabel;
     // console.log(id)
     // console.log(isActive)
     if (isActive) {
-      routeLabel = 'InActiveCustomer'
+      routeLabel = "InActiveCustomer";
     } else {
-      routeLabel = 'ActivateCustomer'
+      routeLabel = "ActivateCustomer";
     }
 
     request
       .put(`Customer/${routeLabel}`, { id: id })
       .then((res) => {
-        ToastComponent('Success', 'Status updated', 'success', toast)
-        getCustomerHandler()
+        ToastComponent("Success", "Status updated", "success", toast);
+        getCustomerHandler();
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   //SHOW CUSTOMER DATA----
   const getCustomerHandler = () => {
     fetchCustomerApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false)
-      setCustomers(res)
-      setPageTotal(res.totalCount)
-    })
-  }
+      setIsLoading(false);
+      setCustomers(res);
+      setPageTotal(res.totalCount);
+    });
+  };
 
   useEffect(() => {
-    getCustomerHandler()
+    getCustomerHandler();
 
     return () => {
-      setCustomers([])
-    }
-  }, [currentPage, pageSize, status, search])
+      setCustomers([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   // SEARCH
   const searchHandler = (inputValue) => {
-    setSearch(inputValue)
+    setSearch(inputValue);
     // console.log(inputValue)
-  }
+  };
 
   //ADD CUSTOMER---
   const addCustomerHandler = () => {
     setEditData({
-      id: '',
-      customerCode: '',
-      customerName: '',
-      customerTypeId: '',
-      companyName: 'RDF',
-      mobileNumber: '',
-      address: '',
+      id: "",
+      customerCode: "",
+      customerName: "",
+      customerTypeId: "",
+      companyName: "RDF",
+      mobileNumber: "",
+      address: "",
       addedBy: currentUser.userName,
-      modifiedBy: '',
-    })
-    onOpen()
-    setDisableEdit(false)
-  }
+      modifiedBy: "",
+    });
+    onOpen();
+    setDisableEdit(false);
+  };
 
   //EDIT SUPPLIER CATEGORY--
   const editCustomerHandler = (customer) => {
-    setDisableEdit(true)
-    setEditData(customer)
-    onOpen()
+    setDisableEdit(true);
+    setEditData(customer);
+    onOpen();
     // console.log(mod.mainMenu)
-  }
+  };
 
   //FOR DRAWER (Drawer / Drawer Tagging)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex
@@ -199,24 +200,24 @@ const CustomersManagement = () => {
         <Flex flexDirection="column" gap={1} w="full">
           <Flex justifyContent="space-between" alignItems="center">
             <HStack w="25%" mt={3}>
-                <InputGroup size="sm">
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<FiSearch bg="black" fontSize="18px" />}
-                  />
-                  <Input
-                    borderRadius="lg"
-                    fontSize="13px"
-                    type="text"
-                    border="1px"
-                    bg="#E9EBEC"
-                    placeholder="Search Customer Name"
-                    borderColor="gray.400"
-                    _hover={{ borderColor: 'gray.400' }}
-                    onChange={(e) => searchHandler(e.target.value)}
-                  />
-                </InputGroup>
-              </HStack>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<FiSearch bg="black" fontSize="18px" />}
+                />
+                <Input
+                  borderRadius="lg"
+                  fontSize="13px"
+                  type="text"
+                  border="1px"
+                  bg="#E9EBEC"
+                  placeholder="Search Customer Name"
+                  borderColor="gray.400"
+                  _hover={{ borderColor: "gray.400" }}
+                  onChange={(e) => searchHandler(e.target.value)}
+                />
+              </InputGroup>
+            </HStack>
 
             <HStack flexDirection="row">
               <Text fontSize="12px">STATUS:</Text>
@@ -267,9 +268,9 @@ const CustomersManagement = () => {
                       <Th color="#D6D6D6" fontSize="10px">
                         Company
                       </Th>
-                      <Th color="#D6D6D6" fontSize="10px">
+                      {/* <Th color="#D6D6D6" fontSize="10px">
                         Mobile Number
-                      </Th>
+                      </Th> */}
                       <Th color="#D6D6D6" fontSize="10px">
                         Address
                       </Th>
@@ -292,7 +293,7 @@ const CustomersManagement = () => {
                         <Td fontSize="11px">{cust.customerName}</Td>
                         <Td fontSize="11px">{cust.customerType}</Td>
                         <Td fontSize="11px">{cust.companyName}</Td>
-                        <Td fontSize="11px">{cust.mobileNumber}</Td>
+                        {/* <Td fontSize="11px">{cust.mobileNumber}</Td> */}
                         <Td fontSize="11px">{cust.address}</Td>
                         {/* <Td fontSize="11px">{cust.addedBy}</Td> */}
                         <Td fontSize="11px">{cust.dateAdded}</Td>
@@ -301,6 +302,8 @@ const CustomersManagement = () => {
                           <Flex>
                             <HStack>
                               <Button
+                                p={0}
+                                size="sm"
                                 onClick={() => editCustomerHandler(cust)}
                                 bg="none"
                                 title="Edit"
@@ -312,13 +315,23 @@ const CustomersManagement = () => {
                                 {({ onClose }) => (
                                   <>
                                     <PopoverTrigger>
-                                      <Button
-                                        p={0}
-                                        bg="none"
-                                        title="Active/Inactive"
-                                      >
-                                        <GiChoice />
-                                      </Button>
+                                      {cust.isActive === true ? (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnon.png"
+                                            title="active"
+                                          />
+                                        </Button>
+                                      ) : (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnoff.png"
+                                            title="inactive"
+                                          />
+                                        </Button>
+                                      )}
                                     </PopoverTrigger>
                                     <Portal>
                                       <PopoverContent bg="primary" color="#fff">
@@ -346,7 +359,7 @@ const CustomersManagement = () => {
                                               onClick={() =>
                                                 changeStatusHandler(
                                                   cust.id,
-                                                  cust.isActive,
+                                                  cust.isActive
                                                 )
                                               }
                                             >
@@ -375,7 +388,7 @@ const CustomersManagement = () => {
                 colorScheme="blue"
                 fontSize="13px"
                 fontWeight="normal"
-                _hover={{ bg: 'blue.400', color: '#fff' }}
+                _hover={{ bg: "blue.400", color: "#fff" }}
                 w="auto"
                 leftIcon={<RiAddFill fontSize="20px" />}
                 borderRadius="none"
@@ -407,16 +420,16 @@ const CustomersManagement = () => {
                       bg="primary"
                       color="white"
                       p={1}
-                      _hover={{ bg: 'btnColor', color: 'white' }}
+                      _hover={{ bg: "btnColor", color: "white" }}
                       size="sm"
                     >
-                      {'<<'}
+                      {"<<"}
                     </PaginationPrevious>
                     <PaginationPageGroup ml={1} mr={1}>
                       {pages.map((page) => (
                         <PaginationPage
-                          _hover={{ bg: 'btnColor', color: 'white' }}
-                          _focus={{ bg: 'btnColor' }}
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
                           p={3}
                           bg="primary"
                           color="white"
@@ -431,11 +444,11 @@ const CustomersManagement = () => {
                         bg="primary"
                         color="white"
                         p={1}
-                        _hover={{ bg: 'btnColor', color: 'white' }}
+                        _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
                         mb={2}
                       >
-                        {'>>'}
+                        {">>"}
                       </PaginationNext>
                       <Select
                         onChange={handlePageSizeChange}
@@ -458,29 +471,29 @@ const CustomersManagement = () => {
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default CustomersManagement
+export default CustomersManagement;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    customerCode: yup.string().required('Customer Code is required'),
-    customerName: yup.string().required('Customer Name is required'),
-    customerTypeId: yup.string().required('Customer Type is required'),
-    companyName: yup.string().required('Company is required'),
-    mobileNumber: yup.string().required('Mobile Number is required').max(11, 'Number must be 11 numbers'),
-    address: yup.string().required('Address is required'),
+    customerCode: yup.string().required("Customer Code is required"),
+    customerName: yup.string().required("Customer Name is required"),
+    customerTypeId: yup.string().required("Customer Type is required"),
+    companyName: yup.string().required("Company is required"),
+    // mobileNumber: yup.string().required('Mobile Number is required').max(11, 'Number must be 11 numbers'),
+    address: yup.string().required("Address is required"),
   }),
-})
+});
 
-const currentUser = decodeUser()
+const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getCustomerHandler, editData, disableEdit } = props
-  const toast = useToast()
-  const [customerType, setCustomerType] = useState([])
+  const { isOpen, onClose, getCustomerHandler, editData, disableEdit } = props;
+  const toast = useToast();
+  const [customerType, setCustomerType] = useState([]);
 
   const {
     register,
@@ -490,80 +503,79 @@ const DrawerComponent = (props) => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       formData: {
-        id: '',
-        customerCode: '',
-        customerName: '',
-        customerTypeId: '',
-        companyName: 'RDF',
-        mobileNumber: '',
-        address: '',
+        id: "",
+        customerCode: "",
+        customerName: "",
+        customerTypeId: "",
+        companyName: "RDF",
+        // mobileNumber: '',
+        address: "",
         addedBy: currentUser?.userName,
-        modifiedBy: '',
+        modifiedBy: "",
       },
     },
-  })
+  });
 
   const fetchCustomerType = async () => {
     try {
-      const res = await request.get('Customer/GetAllActiveCustomerType')
-      setCustomerType(res.data)
+      const res = await request.get("Customer/GetAllActiveCustomerType");
+      setCustomerType(res.data);
     } catch (error) {}
-  }
+  };
 
   useEffect(() => {
     try {
-      fetchCustomerType()
+      fetchCustomerType();
     } catch (error) {}
-  }, [])
-
+  }, []);
 
   const submitHandler = async (data) => {
     try {
-      if (data.formData.id === '') {
-        delete data.formData['id']
+      if (data.formData.id === "") {
+        delete data.formData["id"];
         const res = await request
-          .post('Customer/AddNewCustomer', data.formData)
+          .post("Customer/AddNewCustomer", data.formData)
           .then((res) => {
             ToastComponent(
-              'Success',
-              'Supplier Category created!',
-              'success',
-              toast,
-            )
-            getCustomerHandler()
-            onClose()
+              "Success",
+              "Supplier Category created!",
+              "success",
+              toast
+            );
+            getCustomerHandler();
+            onClose();
           })
           .catch((err) => {
-            ToastComponent('Error', err.response.data, 'error', toast)
-            data.formData.id = ''
-          })
+            ToastComponent("Error", err.response.data, "error", toast);
+            data.formData.id = "";
+          });
       } else {
         const res = await request
           .put(`Customer/UpdateCustomer`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'Customer Updated', 'success', toast)
-            getCustomerHandler()
-            onClose(onClose)
+            ToastComponent("Success", "Customer Updated", "success", toast);
+            getCustomerHandler();
+            onClose(onClose);
           })
           .catch((error) => {
             ToastComponent(
-              'Update Failed',
+              "Update Failed",
               error.response.data,
-              'warning',
-              toast,
-            )
-          })
+              "warning",
+              toast
+            );
+          });
       }
     } catch (err) {}
-  }
+  };
 
   useEffect(() => {
     if (editData.id) {
       setValue(
-        'formData',
+        "formData",
         {
           id: editData.id,
           customerCode: editData?.customerCode,
@@ -574,10 +586,10 @@ const DrawerComponent = (props) => {
           address: editData?.address,
           modifiedBy: currentUser.userName,
         },
-        { shouldValidate: true },
-      )
+        { shouldValidate: true }
+      );
     }
-  }, [editData])
+  }, [editData]);
 
   // console.log(watch('formData'))
 
@@ -594,13 +606,13 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Customer Code:</FormLabel>
                   <Input
-                    {...register('formData.customerCode')}
+                    {...register("formData.customerCode")}
                     placeholder="Please enter Custome Code"
                     autoComplete="off"
                     disabled={disableEdit}
                     readOnly={disableEdit}
-                    _disabled={{ color: 'black' }}
-                    bgColor={disableEdit && 'gray.300'}
+                    _disabled={{ color: "black" }}
+                    bgColor={disableEdit && "gray.300"}
                     autoFocus
                   />
                   <Text color="red" fontSize="xs">
@@ -610,7 +622,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Customer Name:</FormLabel>
                   <Input
-                    {...register('formData.customerName')}
+                    {...register("formData.customerName")}
                     placeholder="Please enter Customer Name"
                     autoComplete="off"
                   />
@@ -622,7 +634,7 @@ const DrawerComponent = (props) => {
                   <FormLabel>Customer Type:</FormLabel>
                   {customerType.length > 0 ? (
                     <Select
-                      {...register('formData.customerTypeId')}
+                      {...register("formData.customerTypeId")}
                       placeholder="Select Customer Type"
                     >
                       {customerType.map((ct) => (
@@ -632,7 +644,7 @@ const DrawerComponent = (props) => {
                       ))}
                     </Select>
                   ) : (
-                    'loading'
+                    "loading"
                   )}
                   <Text color="red" fontSize="xs">
                     {errors.formData?.customerTypeId?.message}
@@ -641,20 +653,20 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Company Name:</FormLabel>
                   <Input
-                    {...register('formData.companyName')}
+                    {...register("formData.companyName")}
                     placeholder="Please enter Company Name"
-                    autoComplete='off'
+                    autoComplete="off"
                     disabled={true}
                     readOnly={true}
-                    _disabled={{ color: 'black' }}
-                    bgColor='gray.300'
-                    cursor='not-allowed'
+                    _disabled={{ color: "black" }}
+                    bgColor="gray.300"
+                    cursor="not-allowed"
                   />
                   <Text color="red" fontSize="xs">
                     {errors.formData?.customerName?.message}
                   </Text>
                 </Box>
-                <Box>
+                {/* <Box>
                   <FormLabel>Mobile Number:</FormLabel>
                   <Input
                     {...register('formData.mobileNumber')}
@@ -665,11 +677,11 @@ const DrawerComponent = (props) => {
                   <Text color="red" fontSize="xs">
                     {errors.formData?.mobileNumber?.message}
                   </Text>
-                </Box>
+                </Box> */}
                 <Box>
                   <FormLabel>Address:</FormLabel>
                   <Input
-                    {...register('formData.address')}
+                    {...register("formData.address")}
                     placeholder="Please enter Address"
                     autoComplete="off"
                   />
@@ -691,5 +703,5 @@ const DrawerComponent = (props) => {
         </form>
       </Drawer>
     </>
-  )
-}
+  );
+};

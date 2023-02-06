@@ -35,20 +35,21 @@ import {
   PopoverCloseButton,
   VStack,
   Portal,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { GiChoice } from 'react-icons/gi'
-import { FiSearch } from 'react-icons/fi'
-import { RiAddFill } from 'react-icons/ri'
-import PageScroll from '../../utils/PageScroll'
-import request from '../../services/ApiClient'
-import { ToastComponent } from '../../components/Toast'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { decodeUser } from '../../services/decode-user'
+  Image,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { AiTwotoneEdit } from "react-icons/ai";
+import { GiChoice } from "react-icons/gi";
+import { FiSearch } from "react-icons/fi";
+import { RiAddFill } from "react-icons/ri";
+import PageScroll from "../../utils/PageScroll";
+import request from "../../services/ApiClient";
+import { ToastComponent } from "../../components/Toast";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -57,32 +58,32 @@ import {
   PaginationPrevious,
   PaginationContainer,
   PaginationPageGroup,
-} from '@ajna/pagination'
+} from "@ajna/pagination";
 
 const LotCategory = () => {
-  const [lotCategory, setLotCategory] = useState([])
-  const [editData, setEditData] = useState([])
-  const [status, setStatus] = useState(true)
-  const [search, setSearch] = useState('')
-  const toast = useToast()
-  const currentUser = decodeUser()
+  const [lotCategory, setLotCategory] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
+  const toast = useToast();
+  const currentUser = decodeUser();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [pageTotal, setPageTotal] = useState(undefined)
-  const [disableEdit, setDisableEdit] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageTotal, setPageTotal] = useState(undefined);
+  const [disableEdit, setDisableEdit] = useState(false);
 
   // FETCH API LOT CATEGORY:
   const fetchLotCategoryApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `Lot/GetAllLotCategoryWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`,
-    )
+      `Lot/GetAllLotCategoryWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+    );
 
-    return response.data
-  }
+    return response.data;
+  };
 
   //PAGINATION
-  const outerLimit = 2
-  const innerLimit = 2
+  const outerLimit = 2;
+  const innerLimit = 2;
   const {
     currentPage,
     setCurrentPage,
@@ -97,88 +98,88 @@ const LotCategory = () => {
       inner: innerLimit,
     },
     initialState: { currentPage: 1, pageSize: 5 },
-  })
+  });
 
   const handlePageChange = (nextPage) => {
-    setCurrentPage(nextPage)
-  }
+    setCurrentPage(nextPage);
+  };
 
   const handlePageSizeChange = (e) => {
-    const pageSize = Number(e.target.value)
-    setPageSize(pageSize)
-  }
+    const pageSize = Number(e.target.value);
+    setPageSize(pageSize);
+  };
 
   //STATUS
   const statusHandler = (data) => {
-    setStatus(data)
-  }
+    setStatus(data);
+  };
 
   const changeStatusHandler = (id, isActive) => {
-    let routeLabel
-    console.log(id)
-    console.log(isActive)
+    let routeLabel;
+    console.log(id);
+    console.log(isActive);
     if (isActive) {
-      routeLabel = 'InActiveLotCategories'
+      routeLabel = "InActiveLotCategories";
     } else {
-      routeLabel = 'ActivateLotCategories'
+      routeLabel = "ActivateLotCategories";
     }
 
     request
       .put(`Lot/${routeLabel}`, { id: id })
       .then((res) => {
-        ToastComponent('Success', 'Status updated', 'success', toast)
-        getLotCategoryHandler()
+        ToastComponent("Success", "Status updated", "success", toast);
+        getLotCategoryHandler();
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   //SHOW LOT CATEGORY DATA----
   const getLotCategoryHandler = () => {
     fetchLotCategoryApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false)
-      setLotCategory(res)
-      setPageTotal(res.totalCount)
-    })
-  }
+      setIsLoading(false);
+      setLotCategory(res);
+      setPageTotal(res.totalCount);
+    });
+  };
 
   useEffect(() => {
-    getLotCategoryHandler()
+    getLotCategoryHandler();
 
     return () => {
-      setLotCategory([])
-    }
-  }, [currentPage, pageSize, status, search])
+      setLotCategory([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   // SEARCH
   const searchHandler = (inputValue) => {
-    setSearch(inputValue)
-    console.log(inputValue)
-  }
+    setSearch(inputValue);
+    console.log(inputValue);
+  };
 
   //ADD LOT CATEGORY HANDLER---
   const addLotCategoryHandler = () => {
     setEditData({
-      id: '',
-      lotName: '',
+      id: "",
+      lotName: "",
       addedBy: currentUser.userName,
-      modifiedBy: '',
-    })
-    onOpen()
-    setDisableEdit(false)
-  }
+      modifiedBy: "",
+    });
+    onOpen();
+    setDisableEdit(false);
+  };
 
   //EDIT LOT CATEGORY--
   const editLotCategoryHandler = (category) => {
-    setDisableEdit(true)
-    setEditData(category)
-    onOpen()
+    setDisableEdit(true);
+    setEditData(category);
+    onOpen();
     // console.log(mod.mainMenu)
-  }
+  };
 
   //FOR DRAWER (Drawer / Drawer Tagging)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex
@@ -194,24 +195,24 @@ const LotCategory = () => {
         <Flex flexDirection="column" gap={1} w="full">
           <Flex justifyContent="space-between" alignItems="center">
             <HStack w="25%" mt={3}>
-                  <InputGroup size="sm">
-                    <InputLeftElement
-                      pointerEvents="none"
-                      children={<FiSearch bg="black" fontSize="18px" />}
-                    />
-                    <Input
-                      borderRadius="lg"
-                      fontSize="13px"
-                      type="text"
-                      border="1px"
-                      bg="#E9EBEC"
-                      placeholder="Search Lot Name"
-                      borderColor="gray.400"
-                      _hover={{ borderColor: 'gray.400' }}
-                      onChange={(e) => searchHandler(e.target.value)}
-                    />
-                  </InputGroup>
-                </HStack>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<FiSearch bg="black" fontSize="18px" />}
+                />
+                <Input
+                  borderRadius="lg"
+                  fontSize="13px"
+                  type="text"
+                  border="1px"
+                  bg="#E9EBEC"
+                  placeholder="Search Lot Name"
+                  borderColor="gray.400"
+                  _hover={{ borderColor: "gray.400" }}
+                  onChange={(e) => searchHandler(e.target.value)}
+                />
+              </InputGroup>
+            </HStack>
 
             <HStack flexDirection="row">
               <Text fontSize="12px">STATUS:</Text>
@@ -278,6 +279,8 @@ const LotCategory = () => {
                             <HStack>
                               <Button
                                 bg="none"
+                                p={0}
+                                size="sm"
                                 onClick={() => editLotCategoryHandler(cat)}
                               >
                                 <AiTwotoneEdit />
@@ -287,9 +290,23 @@ const LotCategory = () => {
                                 {({ onClose }) => (
                                   <>
                                     <PopoverTrigger>
-                                      <Button p={0} bg="none">
-                                        <GiChoice />
-                                      </Button>
+                                      {cat.isActive === true ? (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnon.png"
+                                            title="active"
+                                          />
+                                        </Button>
+                                      ) : (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnoff.png"
+                                            title="inactive"
+                                          />
+                                        </Button>
+                                      )}
                                     </PopoverTrigger>
                                     <Portal>
                                       <PopoverContent bg="primary" color="#fff">
@@ -317,7 +334,7 @@ const LotCategory = () => {
                                               onClick={() =>
                                                 changeStatusHandler(
                                                   cat.id,
-                                                  cat.isActive,
+                                                  cat.isActive
                                                 )
                                               }
                                             >
@@ -344,7 +361,7 @@ const LotCategory = () => {
               <Button
                 size="sm"
                 colorScheme="blue"
-                _hover={{ bg: 'blue.400', color: '#fff' }}
+                _hover={{ bg: "blue.400", color: "#fff" }}
                 w="auto"
                 leftIcon={<RiAddFill fontSize="20px" />}
                 borderRadius="none"
@@ -376,16 +393,16 @@ const LotCategory = () => {
                       bg="primary"
                       color="white"
                       p={1}
-                      _hover={{ bg: 'btnColor', color: 'white' }}
+                      _hover={{ bg: "btnColor", color: "white" }}
                       size="sm"
                     >
-                      {'<<'}
+                      {"<<"}
                     </PaginationPrevious>
                     <PaginationPageGroup ml={1} mr={1}>
                       {pages.map((page) => (
                         <PaginationPage
-                          _hover={{ bg: 'btnColor', color: 'white' }}
-                          _focus={{ bg: 'btnColor' }}
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
                           p={3}
                           bg="primary"
                           color="white"
@@ -400,11 +417,11 @@ const LotCategory = () => {
                         bg="primary"
                         color="white"
                         p={1}
-                        _hover={{ bg: 'btnColor', color: 'white' }}
+                        _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
                         mb={2}
                       >
-                        {'>>'}
+                        {">>"}
                       </PaginationNext>
                       <Select
                         onChange={handlePageSizeChange}
@@ -427,29 +444,24 @@ const LotCategory = () => {
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default LotCategory
+export default LotCategory;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    lotName: yup.string().required('Lot Name name is required'),
+    lotName: yup.string().required("Lot Name name is required"),
   }),
-})
+});
 
-const currentUser = decodeUser()
+const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const {
-    isOpen,
-    onClose,
-    getLotCategoryHandler,
-    editData,
-    disableEdit,
-  } = props
-  const toast = useToast()
+  const { isOpen, onClose, getLotCategoryHandler, editData, disableEdit } =
+    props;
+  const toast = useToast();
 
   const {
     register,
@@ -459,72 +471,72 @@ const DrawerComponent = (props) => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       formData: {
-        id: '',
-        lotName: '',
+        id: "",
+        lotName: "",
         addedBy: currentUser?.userName,
-        modifiedBy: '',
+        modifiedBy: "",
       },
     },
-  })
+  });
 
   const submitHandler = async (data) => {
     try {
-      if (data.formData.id === '') {
-        delete data.formData['id']
+      if (data.formData.id === "") {
+        delete data.formData["id"];
         const res = await request
-          .post('Lot/AddNewLotCategory', data.formData)
+          .post("Lot/AddNewLotCategory", data.formData)
           .then((res) => {
             ToastComponent(
-              'Success',
-              'New Lot Category created!',
-              'success',
-              toast,
-            )
-            getLotCategoryHandler()
-            onClose()
+              "Success",
+              "New Lot Category created!",
+              "success",
+              toast
+            );
+            getLotCategoryHandler();
+            onClose();
           })
           .catch((err) => {
-            ToastComponent('Error', err.response.data, 'error', toast)
-            data.formData.id = ''
-          })
+            ToastComponent("Error", err.response.data, "error", toast);
+            data.formData.id = "";
+          });
       } else {
         const res = await request
           .put(`Lot/UpdateLotCategories`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'Lot Category Updated', 'success', toast)
-            getLotCategoryHandler()
-            onClose(onClose)
+            ToastComponent("Success", "Lot Category Updated", "success", toast);
+            getLotCategoryHandler();
+            onClose(onClose);
           })
           .catch((error) => {
             ToastComponent(
-              'Update Failed',
+              "Update Failed",
               error.response.data,
-              'warning',
-              toast,
-            )
-          })
+              "warning",
+              toast
+            );
+          });
       }
     } catch (err) {}
-  }
+  };
 
   useEffect(() => {
     if (editData.id) {
       setValue(
-        'formData',
+        "formData",
         {
           id: editData.id,
           lotName: editData?.lotCategoryName,
           modifiedBy: currentUser.userName,
         },
-        { shouldValidate: true },
-      )
+        { shouldValidate: true }
+      );
     }
-  }, [editData])
+  }, [editData]);
 
-  console.log(watch('formData'))
+  console.log(watch("formData"));
 
   return (
     <>
@@ -541,7 +553,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Lot Name:</FormLabel>
                   <Input
-                    {...register('formData.lotName')}
+                    {...register("formData.lotName")}
                     placeholder="Please enter Lot Category name"
                     autoComplete="off"
                   />
@@ -563,5 +575,5 @@ const DrawerComponent = (props) => {
         </form>
       </Drawer>
     </>
-  )
-}
+  );
+};

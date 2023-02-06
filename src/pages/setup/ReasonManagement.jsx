@@ -35,21 +35,22 @@ import {
   PopoverCloseButton,
   VStack,
   Portal,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { GiChoice } from 'react-icons/gi'
-import { FiSearch } from 'react-icons/fi'
-import { RiAddFill } from 'react-icons/ri'
-import PageScroll from '../../utils/PageScroll'
-import request from '../../services/ApiClient'
-import { ToastComponent } from '../../components/Toast'
+  Image,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { AiTwotoneEdit } from "react-icons/ai";
+import { GiChoice } from "react-icons/gi";
+import { FiSearch } from "react-icons/fi";
+import { RiAddFill } from "react-icons/ri";
+import PageScroll from "../../utils/PageScroll";
+import request from "../../services/ApiClient";
+import { ToastComponent } from "../../components/Toast";
 
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { decodeUser } from '../../services/decode-user'
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -58,32 +59,32 @@ import {
   PaginationPrevious,
   PaginationContainer,
   PaginationPageGroup,
-} from '@ajna/pagination'
+} from "@ajna/pagination";
 
 const ReasonManagement = () => {
-  const [reasons, setReasons] = useState([])
-  const [editData, setEditData] = useState([])
-  const [status, setStatus] = useState(true)
-  const [search, setSearch] = useState('')
-  const toast = useToast()
-  const currentUser = decodeUser()
+  const [reasons, setReasons] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
+  const toast = useToast();
+  const currentUser = decodeUser();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [pageTotal, setPageTotal] = useState(undefined)
-  const [disableEdit, setDisableEdit] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageTotal, setPageTotal] = useState(undefined);
+  const [disableEdit, setDisableEdit] = useState(false);
 
   // FETCH API REASON:
   const fetchReasonApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `Reason/GetAllReasonWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`,
-    )
+      `Reason/GetAllReasonWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+    );
 
-    return response.data
-  }
+    return response.data;
+  };
 
   //PAGINATION
-  const outerLimit = 2
-  const innerLimit = 2
+  const outerLimit = 2;
+  const innerLimit = 2;
   const {
     currentPage,
     setCurrentPage,
@@ -98,87 +99,87 @@ const ReasonManagement = () => {
       inner: innerLimit,
     },
     initialState: { currentPage: 1, pageSize: 5 },
-  })
+  });
 
   const handlePageChange = (nextPage) => {
-    setCurrentPage(nextPage)
-  }
+    setCurrentPage(nextPage);
+  };
 
   const handlePageSizeChange = (e) => {
-    const pageSize = Number(e.target.value)
-    setPageSize(pageSize)
-  }
+    const pageSize = Number(e.target.value);
+    setPageSize(pageSize);
+  };
 
   //STATUS
   const statusHandler = (data) => {
-    setStatus(data)
-  }
+    setStatus(data);
+  };
 
   const changeStatusHandler = (id, isActive) => {
-    let routeLabel
+    let routeLabel;
     if (isActive) {
-      routeLabel = 'InActiveReason'
+      routeLabel = "InActiveReason";
     } else {
-      routeLabel = 'ActivateReason'
+      routeLabel = "ActivateReason";
     }
 
     request
       .put(`/Reason/${routeLabel}`, { id: id })
       .then((res) => {
-        ToastComponent('Success', 'Status updated', 'success', toast)
-        getReasonHandler()
+        ToastComponent("Success", "Status updated", "success", toast);
+        getReasonHandler();
       })
       .catch((err) => {
-        console.log(err)
-      })
-    console.log(routeLabel)
-  }
+        console.log(err);
+      });
+    console.log(routeLabel);
+  };
 
   //SHOW REASON DATA----
   const getReasonHandler = () => {
     fetchReasonApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false)
-      setReasons(res)
-      setPageTotal(res.totalCount)
-    })
-  }
+      setIsLoading(false);
+      setReasons(res);
+      setPageTotal(res.totalCount);
+    });
+  };
 
   useEffect(() => {
-    getReasonHandler()
+    getReasonHandler();
 
     return () => {
-      setReasons([])
-    }
-  }, [currentPage, pageSize, status, search])
+      setReasons([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   // SEARCH
   const searchHandler = (inputValue) => {
-    setSearch(inputValue)
-    console.log(inputValue)
-  }
+    setSearch(inputValue);
+    console.log(inputValue);
+  };
 
   //ADD REASON HANDLER---
   const addReasonHandler = () => {
     setEditData({
-      id: '',
-      mainMenuId: '',
-      reasonName: '',
+      id: "",
+      mainMenuId: "",
+      reasonName: "",
       addedBy: currentUser.userName,
-      modifiedBy: '',
-    })
-    onOpen()
-    setDisableEdit(false)
-  }
+      modifiedBy: "",
+    });
+    onOpen();
+    setDisableEdit(false);
+  };
 
   //EDIT REASON--
   const editReasonHandler = (reason) => {
-    setDisableEdit(true)
-    setEditData(reason)
-    onOpen()
-  }
+    setDisableEdit(true);
+    setEditData(reason);
+    onOpen();
+  };
 
   //FOR DRAWER
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex
@@ -194,24 +195,24 @@ const ReasonManagement = () => {
         <Flex flexDirection="column" gap={1} w="full">
           <Flex justifyContent="space-between" alignItems="center">
             <HStack w="25%" mt={3}>
-                <InputGroup size="sm">
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<FiSearch bg="black" fontSize="18px" />}
-                  />
-                  <Input
-                    borderRadius="lg"
-                    fontSize="13px"
-                    type="text"
-                    border="1px"
-                    bg="#E9EBEC"
-                    placeholder="Search Reason"
-                    borderColor="gray.400"
-                    _hover={{ borderColor: 'gray.400' }}
-                    onChange={(e) => searchHandler(e.target.value)}
-                  />
-                </InputGroup>
-              </HStack>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<FiSearch bg="black" fontSize="18px" />}
+                />
+                <Input
+                  borderRadius="lg"
+                  fontSize="13px"
+                  type="text"
+                  border="1px"
+                  bg="#E9EBEC"
+                  placeholder="Search Reason"
+                  borderColor="gray.400"
+                  _hover={{ borderColor: "gray.400" }}
+                  onChange={(e) => searchHandler(e.target.value)}
+                />
+              </InputGroup>
+            </HStack>
 
             <HStack flexDirection="row">
               <Text fontSize="12px">STATUS:</Text>
@@ -281,6 +282,8 @@ const ReasonManagement = () => {
                             <HStack>
                               <Button
                                 bg="none"
+                                p={0}
+                                size="sm"
                                 onClick={() => editReasonHandler(rs)}
                               >
                                 <AiTwotoneEdit />
@@ -290,9 +293,23 @@ const ReasonManagement = () => {
                                 {({ onClose }) => (
                                   <>
                                     <PopoverTrigger>
-                                      <Button p={0} bg="none">
-                                        <GiChoice />
-                                      </Button>
+                                      {rs.isActive === true ? (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnon.png"
+                                            title="active"
+                                          />
+                                        </Button>
+                                      ) : (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnoff.png"
+                                            title="inactive"
+                                          />
+                                        </Button>
+                                      )}
                                     </PopoverTrigger>
                                     <Portal>
                                       <PopoverContent bg="primary" color="#fff">
@@ -320,7 +337,7 @@ const ReasonManagement = () => {
                                               onClick={() =>
                                                 changeStatusHandler(
                                                   rs.id,
-                                                  rs.isActive,
+                                                  rs.isActive
                                                 )
                                               }
                                             >
@@ -349,7 +366,7 @@ const ReasonManagement = () => {
                 colorScheme="blue"
                 fontSize="13px"
                 fontWeight="normal"
-                _hover={{ bg: 'blue.400', color: '#fff' }}
+                _hover={{ bg: "blue.400", color: "#fff" }}
                 w="auto"
                 leftIcon={<RiAddFill fontSize="19px" />}
                 borderRadius="none"
@@ -381,16 +398,16 @@ const ReasonManagement = () => {
                       bg="primary"
                       color="white"
                       p={1}
-                      _hover={{ bg: 'btnColor', color: 'white' }}
+                      _hover={{ bg: "btnColor", color: "white" }}
                       size="sm"
                     >
-                      {'<<'}
+                      {"<<"}
                     </PaginationPrevious>
                     <PaginationPageGroup ml={1} mr={1}>
                       {pages.map((page) => (
                         <PaginationPage
-                          _hover={{ bg: 'btnColor', color: 'white' }}
-                          _focus={{ bg: 'btnColor' }}
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
                           p={3}
                           bg="primary"
                           color="white"
@@ -405,11 +422,11 @@ const ReasonManagement = () => {
                         bg="primary"
                         color="white"
                         p={1}
-                        _hover={{ bg: 'btnColor', color: 'white' }}
+                        _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
                         mb={2}
                       >
-                        {'>>'}
+                        {">>"}
                       </PaginationNext>
                       <Select
                         onChange={handlePageSizeChange}
@@ -432,25 +449,25 @@ const ReasonManagement = () => {
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default ReasonManagement
+export default ReasonManagement;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    mainMenuId: yup.number().required('Main Menu is required'),
-    reasonName: yup.string().required('Reason is required'),
+    mainMenuId: yup.number().required("Main Menu is required"),
+    reasonName: yup.string().required("Reason is required"),
   }),
-})
+});
 
-const currentUser = decodeUser()
+const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getReasonHandler, editData } = props
-  const [menu, setMenu] = useState([])
-  const toast = useToast()
+  const { isOpen, onClose, getReasonHandler, editData } = props;
+  const [menu, setMenu] = useState([]);
+  const toast = useToast();
 
   const {
     register,
@@ -460,81 +477,81 @@ const DrawerComponent = (props) => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       formData: {
-        id: '',
-        mainMenuId: '',
-        reasonName: '',
+        id: "",
+        mainMenuId: "",
+        reasonName: "",
         addedBy: currentUser?.userName,
       },
     },
-  })
+  });
 
   // FETCH MAIN MENU
   const fetchMenu = async () => {
     try {
-      const res = await request.get('Module/GetAllActiveMainMenu')
-      setMenu(res.data)
+      const res = await request.get("Module/GetAllActiveMainMenu");
+      setMenu(res.data);
     } catch (error) {}
-  }
+  };
 
   useEffect(() => {
     try {
-      fetchMenu()
+      fetchMenu();
     } catch (error) {}
-  }, [])
+  }, []);
 
   const submitHandler = async (data) => {
     try {
-      if (data.formData.id === '') {
-        delete data.formData['id']
+      if (data.formData.id === "") {
+        delete data.formData["id"];
         const res = await request
-          .post('Reason/AddNewReason', data.formData)
+          .post("Reason/AddNewReason", data.formData)
           .then((res) => {
-            ToastComponent('Success', 'New Reason created!', 'success', toast)
-            getReasonHandler()
-            onClose()
+            ToastComponent("Success", "New Reason created!", "success", toast);
+            getReasonHandler();
+            onClose();
           })
           .catch((err) => {
-            ToastComponent('Error', err.response.data, 'error', toast)
-            data.formData.id = ''
-          })
+            ToastComponent("Error", err.response.data, "error", toast);
+            data.formData.id = "";
+          });
       } else {
         const res = await request
           .put(`Reason/UpdateReason`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'Reason Updated', 'success', toast)
-            getReasonHandler()
-            onClose()
+            ToastComponent("Success", "Reason Updated", "success", toast);
+            getReasonHandler();
+            onClose();
           })
           .catch((error) => {
             ToastComponent(
-              'Update Failed',
+              "Update Failed",
               error.response.data,
-              'warning',
-              toast,
-            )
-          })
+              "warning",
+              toast
+            );
+          });
       }
     } catch (err) {}
-  }
+  };
 
   useEffect(() => {
     if (editData.id) {
       setValue(
-        'formData',
+        "formData",
         {
           id: editData.id,
           mainMenuId: editData?.mainMenuId,
           reasonName: editData?.reasonName,
         },
-        { shouldValidate: true },
-      )
+        { shouldValidate: true }
+      );
     }
-  }, [editData])
+  }, [editData]);
 
-  console.log(watch('formData.id'))
+  console.log(watch("formData.id"));
 
   return (
     <>
@@ -551,7 +568,7 @@ const DrawerComponent = (props) => {
 
                   {menu.length > 0 ? (
                     <Select
-                      {...register('formData.mainMenuId')}
+                      {...register("formData.mainMenuId")}
                       placeholder="Select Main Menu"
                     >
                       {menu.map((mods) => (
@@ -561,7 +578,7 @@ const DrawerComponent = (props) => {
                       ))}
                     </Select>
                   ) : (
-                    'loading'
+                    "loading"
                   )}
                   <Text color="red" fontSize="xs">
                     {errors.formData?.mainMenuId?.message}
@@ -571,7 +588,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Reason:</FormLabel>
                   <Input
-                    {...register('formData.reasonName')}
+                    {...register("formData.reasonName")}
                     placeholder="Please enter Reason name"
                     autoComplete="off"
                   />
@@ -594,5 +611,5 @@ const DrawerComponent = (props) => {
         </form>
       </Drawer>
     </>
-  )
-}
+  );
+};

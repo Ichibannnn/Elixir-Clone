@@ -35,20 +35,21 @@ import {
   PopoverCloseButton,
   VStack,
   Portal,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { GiChoice } from 'react-icons/gi'
-import { FiSearch } from 'react-icons/fi'
-import { RiAddFill } from 'react-icons/ri'
-import PageScroll from '../../utils/PageScroll'
-import request from '../../services/ApiClient'
-import { ToastComponent } from '../../components/Toast'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { decodeUser } from '../../services/decode-user'
+  Image,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { AiTwotoneEdit } from "react-icons/ai";
+import { GiChoice } from "react-icons/gi";
+import { FiSearch } from "react-icons/fi";
+import { RiAddFill } from "react-icons/ri";
+import PageScroll from "../../utils/PageScroll";
+import request from "../../services/ApiClient";
+import { ToastComponent } from "../../components/Toast";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -57,32 +58,32 @@ import {
   PaginationPrevious,
   PaginationContainer,
   PaginationPageGroup,
-} from '@ajna/pagination'
+} from "@ajna/pagination";
 
 const SuppliersManagement = () => {
-  const [suppliers, setSuppliers] = useState([])
-  const [editData, setEditData] = useState([])
-  const [status, setStatus] = useState(true)
-  const [search, setSearch] = useState('')
-  const toast = useToast()
-  const currentUser = decodeUser()
+  const [suppliers, setSuppliers] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
+  const toast = useToast();
+  const currentUser = decodeUser();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [pageTotal, setPageTotal] = useState(undefined)
-  const [disableEdit, setDisableEdit] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageTotal, setPageTotal] = useState(undefined);
+  const [disableEdit, setDisableEdit] = useState(false);
 
   // FETCH API SUPPLIER CATEGORY:
   const fetchSupplierApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `Supplier/GetAllSupplierithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`,
-    )
+      `Supplier/GetAllSupplierithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+    );
 
-    return response.data
-  }
+    return response.data;
+  };
 
   //PAGINATION
-  const outerLimit = 2
-  const innerLimit = 2
+  const outerLimit = 2;
+  const innerLimit = 2;
   const {
     currentPage,
     setCurrentPage,
@@ -97,90 +98,90 @@ const SuppliersManagement = () => {
       inner: innerLimit,
     },
     initialState: { currentPage: 1, pageSize: 5 },
-  })
+  });
 
   const handlePageChange = (nextPage) => {
-    setCurrentPage(nextPage)
-  }
+    setCurrentPage(nextPage);
+  };
 
   const handlePageSizeChange = (e) => {
-    const pageSize = Number(e.target.value)
-    setPageSize(pageSize)
-  }
+    const pageSize = Number(e.target.value);
+    setPageSize(pageSize);
+  };
 
   //STATUS
   const statusHandler = (data) => {
-    setStatus(data)
-  }
+    setStatus(data);
+  };
 
   const changeStatusHandler = (id, isActive) => {
-    let routeLabel
+    let routeLabel;
     // console.log(id)
     // console.log(isActive)
     if (isActive) {
-      routeLabel = 'InActiveSupplier'
+      routeLabel = "InActiveSupplier";
     } else {
-      routeLabel = 'ActivateSupplier'
+      routeLabel = "ActivateSupplier";
     }
 
     request
       .put(`Supplier/${routeLabel}`, { id: id })
       .then((res) => {
-        ToastComponent('Success', 'Status updated', 'success', toast)
-        getSupplierHandler()
+        ToastComponent("Success", "Status updated", "success", toast);
+        getSupplierHandler();
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   //SHOW SUPPLIER CATEGORY DATA----
   const getSupplierHandler = () => {
     fetchSupplierApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false)
-      setSuppliers(res)
-      setPageTotal(res.totalCount)
-    })
-  }
+      setIsLoading(false);
+      setSuppliers(res);
+      setPageTotal(res.totalCount);
+    });
+  };
 
   useEffect(() => {
-    getSupplierHandler()
+    getSupplierHandler();
 
     return () => {
-      setSuppliers([])
-    }
-  }, [currentPage, pageSize, status, search])
+      setSuppliers([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   // SEARCH
   const searchHandler = (inputValue) => {
-    setSearch(inputValue)
+    setSearch(inputValue);
     // console.log(inputValue)
-  }
+  };
 
   //ADD SUPPLIER CATEGORY HANDLER---
   const addSupplierHandler = () => {
     setEditData({
-      id: '',
-      supplierCode: '',
-      supplierName: '',
-      supplierAddress: '',
+      id: "",
+      supplierCode: "",
+      supplierName: "",
+      supplierAddress: "",
       addedBy: currentUser.userName,
-      modifiedBy: '',
-    })
-    onOpen()
-    setDisableEdit(false)
-  }
+      modifiedBy: "",
+    });
+    onOpen();
+    setDisableEdit(false);
+  };
 
   //EDIT SUPPLIER CATEGORY--
   const editSupplierHandler = (supplier) => {
-    setDisableEdit(true)
-    setEditData(supplier)
-    onOpen()
+    setDisableEdit(true);
+    setEditData(supplier);
+    onOpen();
     // console.log(mod.mainMenu)
-  }
+  };
 
   //FOR DRAWER (Drawer / Drawer Tagging)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex
@@ -196,24 +197,24 @@ const SuppliersManagement = () => {
         <Flex flexDirection="column" gap={1} w="full">
           <Flex justifyContent="space-between" alignItems="center">
             <HStack w="25%" mt={3}>
-                <InputGroup size="sm">
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<FiSearch bg="black" fontSize="18px" />}
-                  />
-                  <Input
-                    borderRadius="lg"
-                    fontSize="13px"
-                    type="text"
-                    border="1px"
-                    bg="#E9EBEC"
-                    placeholder="Search Supplier Name"
-                    borderColor="gray.400"
-                    _hover={{ borderColor: 'gray.400' }}
-                    onChange={(e) => searchHandler(e.target.value)}
-                  />
-                </InputGroup>
-              </HStack>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<FiSearch bg="black" fontSize="18px" />}
+                />
+                <Input
+                  borderRadius="lg"
+                  fontSize="13px"
+                  type="text"
+                  border="1px"
+                  bg="#E9EBEC"
+                  placeholder="Search Supplier Name"
+                  borderColor="gray.400"
+                  _hover={{ borderColor: "gray.400" }}
+                  onChange={(e) => searchHandler(e.target.value)}
+                />
+              </InputGroup>
+            </HStack>
 
             <HStack flexDirection="row">
               <Text fontSize="12px">STATUS:</Text>
@@ -288,17 +289,33 @@ const SuppliersManagement = () => {
                               <Button
                                 bg="none"
                                 onClick={() => editSupplierHandler(sup)}
+                                size="sm"
+                                p={0}
                               >
-                                <AiTwotoneEdit />
+                                <AiTwotoneEdit fontSize="15px" />
                               </Button>
 
                               <Popover>
                                 {({ onClose }) => (
                                   <>
                                     <PopoverTrigger>
-                                      <Button p={0} bg="none">
-                                        <GiChoice />
-                                      </Button>
+                                      {sup.isActive === true ? (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnon.png"
+                                            title="active"
+                                          />
+                                        </Button>
+                                      ) : (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnoff.png"
+                                            title="inactive"
+                                          />
+                                        </Button>
+                                      )}
                                     </PopoverTrigger>
                                     <Portal>
                                       <PopoverContent bg="primary" color="#fff">
@@ -326,7 +343,7 @@ const SuppliersManagement = () => {
                                               onClick={() =>
                                                 changeStatusHandler(
                                                   sup.id,
-                                                  sup.isActive,
+                                                  sup.isActive
                                                 )
                                               }
                                             >
@@ -355,7 +372,7 @@ const SuppliersManagement = () => {
                 colorScheme="blue"
                 fontSize="13px"
                 fontWeight="normal"
-                _hover={{ bg: 'blue.400', color: '#fff' }}
+                _hover={{ bg: "blue.400", color: "#fff" }}
                 w="auto"
                 leftIcon={<RiAddFill fontSize="20px" />}
                 borderRadius="none"
@@ -387,16 +404,16 @@ const SuppliersManagement = () => {
                       bg="primary"
                       color="white"
                       p={1}
-                      _hover={{ bg: 'btnColor', color: 'white' }}
+                      _hover={{ bg: "btnColor", color: "white" }}
                       size="sm"
                     >
-                      {'<<'}
+                      {"<<"}
                     </PaginationPrevious>
                     <PaginationPageGroup ml={1} mr={1}>
                       {pages.map((page) => (
                         <PaginationPage
-                          _hover={{ bg: 'btnColor', color: 'white' }}
-                          _focus={{ bg: 'btnColor' }}
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
                           p={3}
                           bg="primary"
                           color="white"
@@ -411,11 +428,11 @@ const SuppliersManagement = () => {
                         bg="primary"
                         color="white"
                         p={1}
-                        _hover={{ bg: 'btnColor', color: 'white' }}
+                        _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
                         mb={2}
                       >
-                        {'>>'}
+                        {">>"}
                       </PaginationNext>
                       <Select
                         onChange={handlePageSizeChange}
@@ -438,25 +455,25 @@ const SuppliersManagement = () => {
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default SuppliersManagement
+export default SuppliersManagement;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    supplierCode: yup.string().required('Supplier Code is required'),
-    supplierName: yup.string().required('Supplier Name is required'),
-    supplierAddress: yup.string().required('Supplier Address is required'),
+    supplierCode: yup.string().required("Supplier Code is required"),
+    supplierName: yup.string().required("Supplier Name is required"),
+    supplierAddress: yup.string().required("Supplier Address is required"),
   }),
-})
+});
 
-const currentUser = decodeUser()
+const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getSupplierHandler, editData, disableEdit } = props
-  const toast = useToast()
+  const { isOpen, onClose, getSupplierHandler, editData, disableEdit } = props;
+  const toast = useToast();
 
   const {
     register,
@@ -466,63 +483,63 @@ const DrawerComponent = (props) => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       formData: {
-        id: '',
-        supplierCode: '',
-        supplierName: '',
-        supplierAddress: '',
+        id: "",
+        supplierCode: "",
+        supplierName: "",
+        supplierAddress: "",
         addedBy: currentUser?.userName,
-        modifiedBy: '',
+        modifiedBy: "",
       },
     },
-  })
+  });
 
   const submitHandler = async (data) => {
     try {
-      if (data.formData.id === '') {
-        delete data.formData['id']
+      if (data.formData.id === "") {
+        delete data.formData["id"];
         const res = await request
-          .post('Supplier/AddNewSupplier', data.formData)
+          .post("Supplier/AddNewSupplier", data.formData)
           .then((res) => {
             ToastComponent(
-              'Success',
-              'Supplier Category created!',
-              'success',
-              toast,
-            )
-            getSupplierHandler()
-            onClose()
+              "Success",
+              "Supplier Category created!",
+              "success",
+              toast
+            );
+            getSupplierHandler();
+            onClose();
           })
           .catch((err) => {
-            ToastComponent('Error', err.response.data, 'error', toast)
-            data.formData.id = ''
-          })
+            ToastComponent("Error", err.response.data, "error", toast);
+            data.formData.id = "";
+          });
       } else {
         const res = await request
           .put(`Supplier/UpdateSupplier`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'Supplier Updated', 'success', toast)
-            getSupplierHandler()
-            onClose(onClose)
+            ToastComponent("Success", "Supplier Updated", "success", toast);
+            getSupplierHandler();
+            onClose(onClose);
           })
           .catch((error) => {
             ToastComponent(
-              'Update Failed',
+              "Update Failed",
               error.response.data,
-              'warning',
-              toast,
-            )
-          })
+              "warning",
+              toast
+            );
+          });
       }
     } catch (err) {}
-  }
+  };
 
   useEffect(() => {
     if (editData.id) {
       setValue(
-        'formData',
+        "formData",
         {
           id: editData.id,
           supplierCode: editData?.supplierCode,
@@ -530,10 +547,10 @@ const DrawerComponent = (props) => {
           supplierAddress: editData?.supplierAddress,
           modifiedBy: currentUser.userName,
         },
-        { shouldValidate: true },
-      )
+        { shouldValidate: true }
+      );
     }
-  }, [editData])
+  }, [editData]);
 
   // console.log(watch('formData'))
 
@@ -550,13 +567,13 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Supplier Code:</FormLabel>
                   <Input
-                    {...register('formData.supplierCode')}
+                    {...register("formData.supplierCode")}
                     placeholder="Please enter Supplier Code"
                     autoComplete="off"
                     disabled={disableEdit}
                     readOnly={disableEdit}
-                    _disabled={{ color: 'black' }}
-                    bgColor={disableEdit && 'gray.300'}
+                    _disabled={{ color: "black" }}
+                    bgColor={disableEdit && "gray.300"}
                     autoFocus
                   />
                   <Text color="red" fontSize="xs">
@@ -566,7 +583,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Supplier Name:</FormLabel>
                   <Input
-                    {...register('formData.supplierName')}
+                    {...register("formData.supplierName")}
                     placeholder="Please enter Supplier Name"
                     autoComplete="off"
                   />
@@ -577,7 +594,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Supplier Address:</FormLabel>
                   <Input
-                    {...register('formData.supplierAddress')}
+                    {...register("formData.supplierAddress")}
                     placeholder="Please enter Supplier Address"
                     autoComplete="off"
                   />
@@ -599,5 +616,5 @@ const DrawerComponent = (props) => {
         </form>
       </Drawer>
     </>
-  )
-}
+  );
+};

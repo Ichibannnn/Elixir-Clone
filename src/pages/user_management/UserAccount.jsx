@@ -28,7 +28,6 @@ import {
   Tr,
   useDisclosure,
   Popover,
-
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
@@ -44,22 +43,24 @@ import {
   AlertDialogContent,
   AlertDialogCloseButton,
   AlertDialogOverlay,
-} from '@chakra-ui/react'
-import { useRef, useState } from 'react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { GiChoice } from 'react-icons/gi'
-import { FiSearch } from 'react-icons/fi'
-import { VscEye, VscEyeClosed } from 'react-icons/vsc'
-import { RiAddFill } from 'react-icons/ri'
-import PageScroll from '../../utils/PageScroll'
-import request from '../../services/ApiClient'
-import { ToastComponent } from '../../components/Toast'
+  Image,
+  Switch,
+} from "@chakra-ui/react";
+import { useRef, useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { AiTwotoneEdit } from "react-icons/ai";
+import { FiSearch } from "react-icons/fi";
+import { GiChoice } from "react-icons/gi";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
+import { RiAddFill } from "react-icons/ri";
+import PageScroll from "../../utils/PageScroll";
+import request from "../../services/ApiClient";
+import { ToastComponent } from "../../components/Toast";
 
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { decodeUser } from '../../services/decode-user'
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -68,37 +69,40 @@ import {
   PaginationPrevious,
   PaginationContainer,
   PaginationPageGroup,
-} from '@ajna/pagination'
+} from "@ajna/pagination";
 
 const UserAccount = () => {
-  const [users, setUsers] = useState([])
-  const [editData, setEditData] = useState([])
-  const [status, setStatus] = useState(true)
-  const [search, setSearch] = useState('')
-  const toast = useToast()
-  const currentUser = decodeUser()
+  const [users, setUsers] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
+  const toast = useToast();
+  const currentUser = decodeUser();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [pageTotal, setPageTotal] = useState(undefined)
-  const [disableEdit, setDisableEdit] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageTotal, setPageTotal] = useState(undefined);
+  const [disableEdit, setDisableEdit] = useState(false);
 
   const fetchUserApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `User/GetAllUserWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`,
-    )
+      `User/GetAllUserWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+    );
 
-    return response.data
-  }
+    return response.data;
+  };
 
   //FOR DRAWER
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure()
-  const cancelRef = useRef()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isAlertOpen,
+    onOpen: onAlertOpen,
+    onClose: onAlertClose,
+  } = useDisclosure();
+  const cancelRef = useRef();
 
   //PAGINATION
-  const outerLimit = 2
-  const innerLimit = 2
+  const outerLimit = 2;
+  const innerLimit = 2;
   const {
     currentPage,
     setCurrentPage,
@@ -113,89 +117,88 @@ const UserAccount = () => {
       inner: innerLimit,
     },
     initialState: { currentPage: 1, pageSize: 5 },
-  })
+  });
 
   //SHOW USER DATA----
   const getUserHandler = () => {
     fetchUserApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false)
-      setUsers(res)
-      setPageTotal(res.totalCount)
-    })
-  }
+      setIsLoading(false);
+      setUsers(res);
+      setPageTotal(res.totalCount);
+    });
+  };
 
   useEffect(() => {
-    getUserHandler()
+    getUserHandler();
 
     return () => {
-      setUsers([])
-    }
-  }, [currentPage, pageSize, status, search])
+      setUsers([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   const handlePageChange = (nextPage) => {
-    setCurrentPage(nextPage)
-  }
+    setCurrentPage(nextPage);
+  };
 
   const handlePageSizeChange = (e) => {
-    const pageSize = Number(e.target.value)
-    setPageSize(pageSize)
-  }
+    const pageSize = Number(e.target.value);
+    setPageSize(pageSize);
+  };
 
   //STATUS
   const statusHandler = (data) => {
-    setStatus(data)
-  }
+    setStatus(data);
+  };
 
   const changeStatusHandler = (id, isActive) => {
-    let routeLabel
+    let routeLabel;
     if (isActive) {
-      routeLabel = 'InactiveUser'
+      routeLabel = "InactiveUser";
     } else {
-      routeLabel = 'ActivateUser'
+      routeLabel = "ActivateUser";
     }
 
     request
       .put(`/User/${routeLabel}`, { id: id })
       .then((res) => {
-        ToastComponent('Success', 'Status updated', 'success', toast)
-        getUserHandler()
+        ToastComponent("Success", "Status updated", "success", toast);
+        getUserHandler();
       })
       .catch((err) => {
-        console.log(err)
-      })
+        console.log(err);
+      });
     // console.log(routeLabel)
-  }
+  };
 
   const searchHandler = (inputValue) => {
-    setSearch(inputValue)
+    setSearch(inputValue);
     // console.log(inputValue)
-  }
+  };
 
   //ADD USER HANDLER---
   const addUserHandler = () => {
     setEditData({
-      id: '',
-      fullName: '',
-      userName: '',
-      password: '',
-      userRoleId: '',
-      departmentId: '',
+      id: "",
+      fullName: "",
+      userName: "",
+      password: "",
+      userRoleId: "",
+      departmentId: "",
       addedBy: currentUser.userName,
-      modifiedBy: '',
-    })
-    onOpen()
-    setDisableEdit(false)
-  }
+      modifiedBy: "",
+    });
+    onOpen();
+    setDisableEdit(false);
+  };
 
   //EDIT USER--
   const editUserHandler = (user) => {
-    setDisableEdit(true)
-    setEditData(user)
-    onOpen()
-  }
+    setDisableEdit(true);
+    setEditData(user);
+    onOpen();
+  };
 
-
-    // console.log(status);
+  // console.log(status);
 
   return (
     <Flex
@@ -209,26 +212,30 @@ const UserAccount = () => {
     >
       <Flex p={2} w="full">
         <Flex flexDirection="column" gap={1} w="full">
-          <Flex justifyContent="space-between" alignItems="center" borderRadius="md">
-          <HStack w="25%" mt={3}>
-            <InputGroup size="sm">
-              <InputLeftElement
-                pointerEvents="none"
-                children={<FiSearch bg="black" fontSize="18px" />}
-              />
-              <Input
-                borderRadius="lg"
-                fontSize="13px"
-                type="text"
-                border="1px"
-                bg="#E9EBEC"
-                placeholder="Search Username"
-                borderColor="gray.400"
-                _hover={{ borderColor: 'gray.400' }}
-                onChange={(e) => searchHandler(e.target.value)}
-              />
-            </InputGroup>
-          </HStack>
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            borderRadius="md"
+          >
+            <HStack w="25%" mt={3}>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<FiSearch bg="black" fontSize="18px" />}
+                />
+                <Input
+                  borderRadius="lg"
+                  fontSize="13px"
+                  type="text"
+                  border="1px"
+                  bg="#E9EBEC"
+                  placeholder="Search Username"
+                  borderColor="gray.400"
+                  _hover={{ borderColor: "gray.400" }}
+                  onChange={(e) => searchHandler(e.target.value)}
+                />
+              </InputGroup>
+            </HStack>
 
             <HStack flexDirection="row">
               <Text fontSize="12px">STATUS:</Text>
@@ -305,18 +312,34 @@ const UserAccount = () => {
                           <HStack>
                             <Button
                               bg="none"
+                              p={0}
+                              size="sm"
                               onClick={() => editUserHandler(user)}
                             >
-                              <AiTwotoneEdit />
+                              <AiTwotoneEdit fontSize="15px" />
                             </Button>
 
                             <Popover>
-                              {({ onClose }) => (
+                              {({ isOpen, onClose }) => (
                                 <>
                                   <PopoverTrigger>
-                                      <Button p={0} bg="none">
-                                        <GiChoice />
+                                    {user.isActive === true ? (
+                                      <Button bg="none" size="md" p={0}>
+                                        <Image
+                                          boxSize="20px"
+                                          src="/images/turnon.png"
+                                          title="active"
+                                        />
                                       </Button>
+                                    ) : (
+                                      <Button bg="none" size="md" p={0}>
+                                        <Image
+                                          boxSize="20px"
+                                          src="/images/turnoff.png"
+                                          title="inactive"
+                                        />
+                                      </Button>
+                                    )}
                                   </PopoverTrigger>
                                   <Portal>
                                     <PopoverContent bg="primary" color="#fff">
@@ -344,7 +367,7 @@ const UserAccount = () => {
                                             onClick={() =>
                                               changeStatusHandler(
                                                 user.id,
-                                                user.isActive,
+                                                user.isActive
                                               )
                                             }
                                           >
@@ -372,7 +395,7 @@ const UserAccount = () => {
                 fontSize="13px"
                 fontWeight="normal"
                 colorScheme="blue"
-                _hover={{ bg: 'blue.400', color: '#fff' }}
+                _hover={{ bg: "blue.400", color: "#fff" }}
                 w="auto"
                 leftIcon={<RiAddFill fontSize="20px" />}
                 borderRadius="none"
@@ -404,16 +427,16 @@ const UserAccount = () => {
                       bg="primary"
                       color="white"
                       p={1}
-                      _hover={{ bg: 'btnColor', color: 'white' }}
+                      _hover={{ bg: "btnColor", color: "white" }}
                       size="sm"
                     >
-                      {'<<'}
+                      {"<<"}
                     </PaginationPrevious>
                     <PaginationPageGroup ml={1} mr={1}>
                       {pages.map((page) => (
                         <PaginationPage
-                          _hover={{ bg: 'btnColor', color: 'white' }}
-                          _focus={{ bg: 'btnColor' }}
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
                           p={3}
                           bg="primary"
                           color="white"
@@ -428,11 +451,11 @@ const UserAccount = () => {
                         bg="primary"
                         color="white"
                         p={1}
-                        _hover={{ bg: 'btnColor', color: 'white' }}
+                        _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
                         mb={2}
                       >
-                        {'>>'}
+                        {">>"}
                       </PaginationNext>
                       <Select
                         onChange={handlePageSizeChange}
@@ -453,37 +476,37 @@ const UserAccount = () => {
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default UserAccount
+export default UserAccount;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    fullName: yup.string().required('Fullname is required'),
+    fullName: yup.string().required("Fullname is required"),
     userName: yup
       .string()
-      .required('Username is required')
-      .min(5, 'Username must be at least 5 characters'),
+      .required("Username is required")
+      .min(5, "Username must be at least 5 characters"),
     password: yup
       .string()
-      .required('Password is required')
-      .min(5, 'Password must be at least 5 characters'),
-    userRoleId: yup.string().required('User Role is required'),
-    departmentId: yup.string().required('Department is required'),
+      .required("Password is required")
+      .min(5, "Password must be at least 5 characters"),
+    userRoleId: yup.string().required("User Role is required"),
+    departmentId: yup.string().required("Department is required"),
   }),
-})
+});
 
-const currentUser = decodeUser()
+const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getUserHandler, editData, disableEdit } = props
+  const { isOpen, onClose, getUserHandler, editData, disableEdit } = props;
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [roles, setRoles] = useState([])
-  const [departments, setDepartment] = useState([])
-  const toast = useToast()
+  const [showPassword, setShowPassword] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [departments, setDepartment] = useState([]);
+  const toast = useToast();
 
   const {
     register,
@@ -493,88 +516,88 @@ const DrawerComponent = (props) => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       formData: {
-        id: '',
-        fullName: '',
-        userName: '',
-        password: '',
-        userRoleId: '',
-        departmentId: '',
+        id: "",
+        fullName: "",
+        userName: "",
+        password: "",
+        userRoleId: "",
+        departmentId: "",
         addedBy: currentUser?.userName,
-        modifiedBy: '',
+        modifiedBy: "",
       },
     },
-  })
+  });
 
   const fetchRoles = async () => {
     try {
-      const res = await request.get('Role/GetAllActiveRoles')
-      setRoles(res.data)
+      const res = await request.get("Role/GetAllActiveRoles");
+      setRoles(res.data);
     } catch (error) {}
-  }
+  };
 
   useEffect(() => {
     try {
-      fetchRoles()
+      fetchRoles();
     } catch (error) {}
-  }, [])
+  }, []);
 
   const fetchDepartment = async () => {
     try {
-      const res = await request.get('User/GetAllActiveDepartment')
-      setDepartment(res.data)
+      const res = await request.get("User/GetAllActiveDepartment");
+      setDepartment(res.data);
     } catch (error) {}
-  }
+  };
 
   useEffect(() => {
     try {
-      fetchDepartment()
+      fetchDepartment();
     } catch (error) {}
-  }, [])
+  }, []);
 
   const submitHandler = async (data) => {
     try {
-      if (data.formData.id === '') {
-        delete data.formData['id']
+      if (data.formData.id === "") {
+        delete data.formData["id"];
         const res = await request
           .post(`User/AddNewUser`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'New user created!', 'success', toast)
-            getUserHandler()
-            onClose()
+            ToastComponent("Success", "New user created!", "success", toast);
+            getUserHandler();
+            onClose();
           })
           .catch((err) => {
-            ToastComponent('Error', err.response.data, 'error', toast)
-            data.formData.id = ''
-          })
+            ToastComponent("Error", err.response.data, "error", toast);
+            data.formData.id = "";
+          });
       } else {
         const res = await request
           .put(`User/UpdateUserInfo`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'User Updated', 'success', toast)
-            getUserHandler()
-            onClose(onClose)
+            ToastComponent("Success", "User Updated", "success", toast);
+            getUserHandler();
+            onClose(onClose);
           })
           .catch((error) => {
             ToastComponent(
-              'Update Failed',
+              "Update Failed",
               error.response.data,
-              'warning',
-              toast,
-            )
-          })
+              "warning",
+              toast
+            );
+          });
       }
     } catch (err) {}
-  }
+  };
 
   // console.log(editData);
 
   useEffect(() => {
     if (editData.id) {
       setValue(
-        'formData',
+        "formData",
         {
           id: editData.id,
           fullName: editData?.fullName,
@@ -584,10 +607,10 @@ const DrawerComponent = (props) => {
           departmentId: editData?.departmentId,
           modifiedBy: currentUser.userName,
         },
-        { shouldValidate: true },
-      )
+        { shouldValidate: true }
+      );
     }
-  }, [editData])
+  }, [editData]);
 
   // console.log(watch('formData.userRoleId'))
 
@@ -604,7 +627,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Full Name:</FormLabel>
                   <Input
-                    {...register('formData.fullName')}
+                    {...register("formData.fullName")}
                     placeholder="Please enter Fullname"
                     autoFocus
                     autoComplete="off"
@@ -617,13 +640,13 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Username:</FormLabel>
                   <Input
-                    {...register('formData.userName')}
+                    {...register("formData.userName")}
                     placeholder="Please enter Fullname"
                     autoComplete="off"
                     disabled={disableEdit}
                     readOnly={disableEdit}
-                    _disabled={{ color: 'black' }}
-                    bgColor={disableEdit && 'gray.300'}
+                    _disabled={{ color: "black" }}
+                    bgColor={disableEdit && "gray.300"}
                   />
                   <Text color="red" fontSize="xs">
                     {errors.formData?.userName?.message}
@@ -634,8 +657,8 @@ const DrawerComponent = (props) => {
                   <FormLabel>Password:</FormLabel>
                   <InputGroup>
                     <Input
-                      type={showPassword ? 'text' : 'password'}
-                      {...register('formData.password')}
+                      type={showPassword ? "text" : "password"}
+                      {...register("formData.password")}
                       placeholder="Please enter Password"
                       autoComplete="off"
                     />
@@ -660,7 +683,11 @@ const DrawerComponent = (props) => {
                   <FormLabel>Role:</FormLabel>
                   {roles.length > 0 ? (
                     <Select
-                      {...register('formData.userRoleId')}
+                      disabled={disableEdit}
+                      readOnly={disableEdit}
+                      _disabled={{ color: "black" }}
+                      bgColor={disableEdit && "gray.400"}
+                      {...register("formData.userRoleId")}
                       placeholder="Select Role"
                     >
                       {roles.map((rol) => (
@@ -670,7 +697,7 @@ const DrawerComponent = (props) => {
                       ))}
                     </Select>
                   ) : (
-                    'loading'
+                    "loading"
                   )}
                   <Text color="red" fontSize="xs">
                     {errors.formData?.userRoleId?.message}
@@ -681,7 +708,7 @@ const DrawerComponent = (props) => {
                   <FormLabel>Department:</FormLabel>
                   {departments.length > 0 ? (
                     <Select
-                      {...register('formData.departmentId')}
+                      {...register("formData.departmentId")}
                       placeholder="Select Department"
                     >
                       {departments.map((dept) => (
@@ -691,7 +718,7 @@ const DrawerComponent = (props) => {
                       ))}
                     </Select>
                   ) : (
-                    'loading'
+                    "loading"
                   )}
                   <Text color="red" fontSize="xs">
                     {errors.formData?.departmentId?.message}
@@ -711,5 +738,5 @@ const DrawerComponent = (props) => {
         </form>
       </Drawer>
     </>
-  )
-}
+  );
+};

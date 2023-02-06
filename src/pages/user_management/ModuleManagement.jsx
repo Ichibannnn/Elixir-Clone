@@ -35,21 +35,22 @@ import {
   PopoverCloseButton,
   VStack,
   Portal,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { GiChoice } from 'react-icons/gi'
-import { FiSearch } from 'react-icons/fi'
-import { RiAddFill } from 'react-icons/ri'
-import PageScroll from '../../utils/PageScroll'
-import request from '../../services/ApiClient'
-import { ToastComponent } from '../../components/Toast'
+  Image,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { AiTwotoneEdit } from "react-icons/ai";
+import { GiChoice } from "react-icons/gi";
+import { FiSearch } from "react-icons/fi";
+import { RiAddFill } from "react-icons/ri";
+import PageScroll from "../../utils/PageScroll";
+import request from "../../services/ApiClient";
+import { ToastComponent } from "../../components/Toast";
 
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { decodeUser } from '../../services/decode-user'
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -58,32 +59,32 @@ import {
   PaginationPrevious,
   PaginationContainer,
   PaginationPageGroup,
-} from '@ajna/pagination'
+} from "@ajna/pagination";
 
 const ModuleManagement = () => {
-  const [module, setModule] = useState([])
-  const [editData, setEditData] = useState([])
-  const [status, setStatus] = useState(true)
-  const [search, setSearch] = useState('')
-  const toast = useToast()
-  const currentUser = decodeUser()
+  const [module, setModule] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
+  const toast = useToast();
+  const currentUser = decodeUser();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [pageTotal, setPageTotal] = useState(undefined)
-  const [disableEdit, setDisableEdit] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageTotal, setPageTotal] = useState(undefined);
+  const [disableEdit, setDisableEdit] = useState(false);
 
   // FETCH API MODULES:
   const fetchModuleApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `Module/GetAllModulesWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`,
-    )
+      `Module/GetAllModulesWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+    );
 
-    return response.data
-  }
+    return response.data;
+  };
 
   //PAGINATION
-  const outerLimit = 2
-  const innerLimit = 2
+  const outerLimit = 2;
+  const innerLimit = 2;
   const {
     currentPage,
     setCurrentPage,
@@ -98,89 +99,90 @@ const ModuleManagement = () => {
       inner: innerLimit,
     },
     initialState: { currentPage: 1, pageSize: 5 },
-  })
+  });
 
   const handlePageChange = (nextPage) => {
-    setCurrentPage(nextPage)
-  }
+    setCurrentPage(nextPage);
+  };
 
   const handlePageSizeChange = (e) => {
-    const pageSize = Number(e.target.value)
-    setPageSize(pageSize)
-  }
+    const pageSize = Number(e.target.value);
+    setPageSize(pageSize);
+  };
 
   //STATUS
   const statusHandler = (data) => {
-    setStatus(data)
-  }
+    setStatus(data);
+  };
 
   const changeStatusHandler = (id, isActive) => {
-    let routeLabel
+    let routeLabel;
     if (isActive) {
-      routeLabel = 'InActiveModule'
+      routeLabel = "InActiveModule";
     } else {
-      routeLabel = 'ActivateModule'
+      routeLabel = "ActivateModule";
     }
 
     request
       .put(`/Module/${routeLabel}`, { id: id })
       .then((res) => {
-        ToastComponent('Success', 'Status updated', 'success', toast)
-        getModuleHandler()
+        ToastComponent("Success", "Status updated", "success", toast);
+        getModuleHandler();
       })
       .catch((err) => {
-        console.log(err)
-      })
+        console.log(err);
+        ToastComponent("Error", err.response.data, "error", toast);
+      });
     // console.log(routeLabel)
-  }
+  };
 
   //SHOW MODULE DATA----
   const getModuleHandler = () => {
     fetchModuleApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false)
-      setModule(res)
-      setPageTotal(res.totalCount)
-    })
-  }
+      setIsLoading(false);
+      setModule(res);
+      setPageTotal(res.totalCount);
+    });
+  };
 
   useEffect(() => {
-    getModuleHandler()
+    getModuleHandler();
 
     return () => {
-      setModule([])
-    }
-  }, [currentPage, pageSize, status, search])
+      setModule([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   // SEARCH
   const searchHandler = (inputValue) => {
-    setSearch(inputValue)
+    setSearch(inputValue);
     // console.log(inputValue)
-  }
+  };
 
   //ADD MODULE HANDLER---
   const addModuleHandler = () => {
     setEditData({
-      id: '',
-      mainMenuId: '',
-      subMenuName: '',
-      moduleName: '',
+      id: "",
+      mainMenuId: "",
+      subMenuName: "",
+      moduleName: "",
       addedBy: currentUser.userName,
-      modifiedBy: '',
-    })
-    onOpen()
-    setDisableEdit(false)
-  }
+      modifiedBy: "",
+    });
+    onOpen();
+    setDisableEdit(false);
+  };
 
   //EDIT MODULE--
   const editModuleHandler = (module) => {
-    setDisableEdit(true)
-    setEditData(module)
-    onOpen()
+    setDisableEdit(true);
+    setEditData(module);
+    onOpen();
     // console.log(module.mainMenuId)
-  }
+  };
 
   //FOR DRAWER
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex
@@ -209,7 +211,7 @@ const ModuleManagement = () => {
                   bg="#E9EBEC"
                   placeholder="Search Sub-Menu Name"
                   borderColor="gray.400"
-                  _hover={{ borderColor: 'gray.400' }}
+                  _hover={{ borderColor: "gray.400" }}
                   onChange={(e) => searchHandler(e.target.value)}
                 />
               </InputGroup>
@@ -283,18 +285,40 @@ const ModuleManagement = () => {
                             <HStack>
                               <Button
                                 bg="none"
+                                size="sm"
                                 onClick={() => editModuleHandler(mod)}
                               >
-                                <AiTwotoneEdit />
+                                <AiTwotoneEdit fontSize="15px" />
                               </Button>
 
                               <Popover>
                                 {({ onClose }) => (
                                   <>
                                     <PopoverTrigger>
-                                      <Button p={0} bg="none">
-                                        <GiChoice />
-                                      </Button>
+                                      {mod.isActive === true ? (
+                                        <Button
+                                          bg="none"
+                                          size="md"
+                                          p={0}
+                                          // disabled={
+                                          //   mod.isActive === true ? true : false
+                                          // }
+                                        >
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnon.png"
+                                            title="active"
+                                          />
+                                        </Button>
+                                      ) : (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnoff.png"
+                                            title="inactive"
+                                          />
+                                        </Button>
+                                      )}
                                     </PopoverTrigger>
                                     <Portal>
                                       <PopoverContent bg="primary" color="#fff">
@@ -322,7 +346,7 @@ const ModuleManagement = () => {
                                               onClick={() =>
                                                 changeStatusHandler(
                                                   mod.id,
-                                                  mod.isActive,
+                                                  mod.isActive
                                                 )
                                               }
                                             >
@@ -351,7 +375,7 @@ const ModuleManagement = () => {
                 colorScheme="blue"
                 fontSize="13px"
                 fontWeight="normal"
-                _hover={{ bg: 'blue.400', color: '#fff' }}
+                _hover={{ bg: "blue.400", color: "#fff" }}
                 w="auto"
                 leftIcon={<RiAddFill fontSize="20px" />}
                 borderRadius="none"
@@ -383,16 +407,16 @@ const ModuleManagement = () => {
                       bg="primary"
                       color="white"
                       p={1}
-                      _hover={{ bg: 'btnColor', color: 'white' }}
+                      _hover={{ bg: "btnColor", color: "white" }}
                       size="sm"
                     >
-                      {'<<'}
+                      {"<<"}
                     </PaginationPrevious>
                     <PaginationPageGroup ml={1} mr={1}>
                       {pages.map((page) => (
                         <PaginationPage
-                          _hover={{ bg: 'btnColor', color: 'white' }}
-                          _focus={{ bg: 'btnColor' }}
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
                           p={3}
                           bg="primary"
                           color="white"
@@ -407,11 +431,11 @@ const ModuleManagement = () => {
                         bg="primary"
                         color="white"
                         p={1}
-                        _hover={{ bg: 'btnColor', color: 'white' }}
+                        _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
                         mb={2}
                       >
-                        {'>>'}
+                        {">>"}
                       </PaginationNext>
                       <Select
                         onChange={handlePageSizeChange}
@@ -434,26 +458,26 @@ const ModuleManagement = () => {
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default ModuleManagement
+export default ModuleManagement;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    mainMenuId: yup.number().required('Main Menu is required'),
-    subMenuName: yup.string().required('Sub-Menu is required'),
-    moduleName: yup.string().required('Module Path is required'),
+    mainMenuId: yup.number().required("Main Menu is required"),
+    subMenuName: yup.string().required("Sub-Menu is required"),
+    moduleName: yup.string().required("Module Path is required"),
   }),
-})
+});
 
-const currentUser = decodeUser()
+const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getModuleHandler, editData } = props
-  const [module, setModule] = useState([])
-  const toast = useToast()
+  const { isOpen, onClose, getModuleHandler, editData } = props;
+  const [module, setModule] = useState([]);
+  const toast = useToast();
 
   const {
     register,
@@ -463,82 +487,81 @@ const DrawerComponent = (props) => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       formData: {
-        id: '',
-        mainMenuId: '',
-        subMenuName: '',
-        moduleName: '',
+        id: "",
+        mainMenuId: "",
+        subMenuName: "",
+        moduleName: "",
         addedBy: currentUser?.userName,
       },
     },
-  })
+  });
 
   // FETCH MAIN MENU
   const fetchMainMenu = async () => {
     try {
-      const res = await request.get('Module/GetAllActiveMainMenu')
-      setModule(res.data)
+      const res = await request.get("Module/GetAllActiveMainMenu");
+      setModule(res.data);
     } catch (error) {}
-  }
-  
+  };
 
   useEffect(() => {
     try {
-      fetchMainMenu()
+      fetchMainMenu();
     } catch (error) {}
-  }, [])
+  }, []);
 
   const submitHandler = async (data) => {
     try {
-      if (data.formData.id === '') {
-        delete data.formData['id']
+      if (data.formData.id === "") {
+        delete data.formData["id"];
         const res = await request
-          .post('Module/AddNewModule', data.formData)
+          .post("Module/AddNewModule", data.formData)
           .then((res) => {
-            ToastComponent('Success', 'New Module created!', 'success', toast)
-            getModuleHandler()
-            onClose()
+            ToastComponent("Success", "New Module created!", "success", toast);
+            getModuleHandler();
+            onClose();
           })
           .catch((err) => {
-            ToastComponent('Error', err.response.data, 'error', toast)
-            data.formData.id = ''
-          })
+            ToastComponent("Error", err.response.data, "error", toast);
+            data.formData.id = "";
+          });
       } else {
         const res = await request
           .put(`Module/UpdateModule`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'Module Updated', 'success', toast)
-            getModuleHandler()
-            onClose()
+            ToastComponent("Success", "Module Updated", "success", toast);
+            getModuleHandler();
+            onClose();
           })
           .catch((error) => {
             ToastComponent(
-              'Update Failed',
+              "Update Failed",
               error.response.data,
-              'warning',
-              toast,
-            )
-          })
+              "warning",
+              toast
+            );
+          });
       }
     } catch (err) {}
-  }
+  };
 
   useEffect(() => {
     if (editData.id) {
       setValue(
-        'formData',
+        "formData",
         {
           id: editData.id,
           mainMenuId: editData?.mainMenuId,
           subMenuName: editData?.subMenuName,
           moduleName: editData?.moduleName,
         },
-        { shouldValidate: true },
-      )
+        { shouldValidate: true }
+      );
     }
-  }, [editData])
+  }, [editData]);
 
   // console.log(watch('formData.id'))
 
@@ -557,7 +580,7 @@ const DrawerComponent = (props) => {
 
                   {module.length > 0 ? (
                     <Select
-                      {...register('formData.mainMenuId')}
+                      {...register("formData.mainMenuId")}
                       placeholder="Select Main Menu"
                     >
                       {module.map((mods) => (
@@ -567,7 +590,7 @@ const DrawerComponent = (props) => {
                       ))}
                     </Select>
                   ) : (
-                    'loading'
+                    "loading"
                   )}
                   <Text color="red" fontSize="xs">
                     {errors.formData?.mainMenuId?.message}
@@ -577,7 +600,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Sub-Menu Name:</FormLabel>
                   <Input
-                    {...register('formData.subMenuName')}
+                    {...register("formData.subMenuName")}
                     placeholder="Please enter Sub-Menu name"
                     autoComplete="off"
                   />
@@ -589,7 +612,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Menu Path Name:</FormLabel>
                   <Input
-                    {...register('formData.moduleName')}
+                    {...register("formData.moduleName")}
                     placeholder="Please enter Menu Path name"
                     autoComplete="off"
                   />
@@ -612,5 +635,5 @@ const DrawerComponent = (props) => {
         </form>
       </Drawer>
     </>
-  )
-}
+  );
+};

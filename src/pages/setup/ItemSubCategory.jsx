@@ -14,7 +14,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
   Select,
   Skeleton,
   Stack,
@@ -61,8 +60,8 @@ import {
   PaginationPageGroup,
 } from "@ajna/pagination";
 
-const MaterialsManagement = () => {
-  const [materials, setMaterials] = useState([]);
+const ItemSubCategory = () => {
+  const [subCategory, setSubCategory] = useState([]);
   const [editData, setEditData] = useState([]);
   const [status, setStatus] = useState(true);
   const [search, setSearch] = useState("");
@@ -73,10 +72,10 @@ const MaterialsManagement = () => {
   const [pageTotal, setPageTotal] = useState(undefined);
   const [disableEdit, setDisableEdit] = useState(false);
 
-  // FETCH API MATERIALS:
-  const fetchMaterialApi = async (pageNumber, pageSize, status, search) => {
+  // FETCH API SUB CATEGORY:
+  const fetchSubCategoryApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `Material/GetAllMaterialWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+      `Material/GetAllSubCategoryPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
     );
 
     return response.data;
@@ -110,23 +109,6 @@ const MaterialsManagement = () => {
     setPageSize(pageSize);
   };
 
-  //SHOW MAIN MENU DATA----
-  const getMaterialHandler = () => {
-    fetchMaterialApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false);
-      setMaterials(res);
-      setPageTotal(res.totalCount);
-    });
-  };
-
-  useEffect(() => {
-    getMaterialHandler();
-
-    return () => {
-      setMaterials([]);
-    };
-  }, [currentPage, pageSize, status, search]);
-
   //STATUS
   const statusHandler = (data) => {
     setStatus(data);
@@ -137,21 +119,38 @@ const MaterialsManagement = () => {
     // console.log(id)
     // console.log(isActive)
     if (isActive) {
-      routeLabel = "InActiveMaterial";
+      routeLabel = "InActiveSubCategory";
     } else {
-      routeLabel = "ActivateMaterial";
+      routeLabel = "ActiveSubCategory";
     }
 
     request
       .put(`Material/${routeLabel}`, { id: id })
       .then((res) => {
         ToastComponent("Success", "Status updated", "success", toast);
-        getMaterialHandler();
+        getSubCategoryHandler();
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  //SHOW SUB CATEGORY DATA----
+  const getSubCategoryHandler = () => {
+    fetchSubCategoryApi(currentPage, pageSize, status, search).then((res) => {
+      setIsLoading(false);
+      setSubCategory(res);
+      setPageTotal(res.totalCount);
+    });
+  };
+
+  useEffect(() => {
+    getSubCategoryHandler();
+
+    return () => {
+      getSubCategoryHandler([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   // SEARCH
   const searchHandler = (inputValue) => {
@@ -159,15 +158,12 @@ const MaterialsManagement = () => {
     // console.log(inputValue)
   };
 
-  //ADD MAIN MENU HANDLER---
-  const addMaterialHandler = () => {
+  //ADD SUB CATEGORY HANDLER---
+  const addSubCategoryHandler = () => {
     setEditData({
       id: "",
-      itemCode: "",
-      itemDescription: "",
       itemCategoryId: "",
-      uomId: "",
-      bufferLevel: "",
+      subcategoryName: "",
       addedBy: currentUser.userName,
       modifiedBy: "",
     });
@@ -175,10 +171,10 @@ const MaterialsManagement = () => {
     setDisableEdit(false);
   };
 
-  //EDIT ROLE--
-  const editMaterialHandler = (materials) => {
+  //EDIT SUB CATEGORY--
+  const editSubCategoryHandler = (subcategory) => {
     setDisableEdit(true);
-    setEditData(materials);
+    setEditData(subcategory);
     onOpen();
     // console.log(mod.mainMenu)
   };
@@ -211,7 +207,7 @@ const MaterialsManagement = () => {
                   type="text"
                   border="1px"
                   bg="#E9EBEC"
-                  placeholder="Search Item Code"
+                  placeholder="Search Sub Category Name"
                   borderColor="gray.400"
                   _hover={{ borderColor: "gray.400" }}
                   onChange={(e) => searchHandler(e.target.value)}
@@ -257,28 +253,16 @@ const MaterialsManagement = () => {
                         ID
                       </Th>
                       <Th color="#D6D6D6" fontSize="10px">
-                        Item Code
+                        Category Name
                       </Th>
                       <Th color="#D6D6D6" fontSize="10px">
-                        Item Description
-                      </Th>
-                      <Th color="#D6D6D6" fontSize="10px">
-                        Item Sub Category
-                      </Th>
-                      <Th color="#D6D6D6" fontSize="10px">
-                        Item Category
-                      </Th>
-                      <Th color="#D6D6D6" fontSize="10px">
-                        UOM
-                      </Th>
-                      <Th color="#D6D6D6" fontSize="10px">
-                        Buffer Level
-                      </Th>
-                      <Th color="#D6D6D6" fontSize="10px">
-                        Name Date Added
+                        Sub Category Name
                       </Th>
                       <Th color="#D6D6D6" fontSize="10px">
                         Added By
+                      </Th>
+                      <Th color="#D6D6D6" fontSize="10px">
+                        Date Added
                       </Th>
                       <Th color="#D6D6D6" fontSize="10px">
                         Action
@@ -286,17 +270,13 @@ const MaterialsManagement = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {materials?.materials?.map((mats, i) => (
+                    {subCategory?.subcategory?.map((subcat, i) => (
                       <Tr key={i}>
-                        <Td fontSize="11px">{mats.id}</Td>
-                        <Td fontSize="11px">{mats.itemCode}</Td>
-                        <Td fontSize="11px">{mats.itemDescription}</Td>
-                        <Td fontSize="11px">{mats.subCategoryName}</Td>
-                        <Td fontSize="11px">{mats.itemCategoryName}</Td>
-                        <Td fontSize="11px">{mats.uom}</Td>
-                        <Td fontSize="11px">{mats.bufferLevel}</Td>
-                        <Td fontSize="11px">{mats.dateAdded}</Td>
-                        <Td fontSize="11px">{mats.addedBy}</Td>
+                        <Td fontSize="11px">{subcat.id}</Td>
+                        <Td fontSize="11px">{subcat.categoryName}</Td>
+                        <Td fontSize="11px">{subcat.subcategoryName}</Td>
+                        <Td fontSize="11px">{subcat.addedBy}</Td>
+                        <Td fontSize="11px">{subcat.dateAdded}</Td>
 
                         <Td pl={0}>
                           <Flex>
@@ -304,7 +284,7 @@ const MaterialsManagement = () => {
                               <Button
                                 bg="none"
                                 size="sm"
-                                onClick={() => editMaterialHandler(mats)}
+                                onClick={() => editSubCategoryHandler(subcat)}
                               >
                                 <AiTwotoneEdit fontSize="15px" />
                               </Button>
@@ -313,7 +293,7 @@ const MaterialsManagement = () => {
                                 {({ onClose }) => (
                                   <>
                                     <PopoverTrigger>
-                                      {mats.isActive === true ? (
+                                      {subcat.isActive === true ? (
                                         <Button bg="none" size="md" p={0}>
                                           <Image
                                             boxSize="20px"
@@ -340,15 +320,15 @@ const MaterialsManagement = () => {
                                         </PopoverHeader>
                                         <PopoverBody>
                                           <VStack onClick={onClose}>
-                                            {mats.isActive === true ? (
+                                            {subcat.isActive === true ? (
                                               <Text>
                                                 Are you sure you want to set
-                                                this Material inactive?
+                                                this Item Category inactive?
                                               </Text>
                                             ) : (
                                               <Text>
                                                 Are you sure you want to set
-                                                this Material active?
+                                                this Item Category active?
                                               </Text>
                                             )}
                                             <Button
@@ -356,8 +336,8 @@ const MaterialsManagement = () => {
                                               size="sm"
                                               onClick={() =>
                                                 changeStatusHandler(
-                                                  mats.id,
-                                                  mats.isActive
+                                                  subcat.id,
+                                                  subcat.isActive
                                                 )
                                               }
                                             >
@@ -378,92 +358,93 @@ const MaterialsManagement = () => {
                   </Tbody>
                 </Table>
               )}
+            </PageScroll>
 
-              <Flex justifyContent="space-between" mt={2}>
-                <Button
-                  size="sm"
-                  colorScheme="blue"
-                  fontSize="13px"
-                  fontWeight="normal"
-                  _hover={{ bg: "blue.400", color: "#fff" }}
-                  w="auto"
-                  leftIcon={<RiAddFill fontSize="20px" />}
-                  borderRadius="none"
-                  onClick={addMaterialHandler}
+            <Flex justifyContent="space-between" mt={3}>
+              <Button
+                size="sm"
+                colorScheme="blue"
+                fontSize="13px"
+                fontWeight="normal"
+                _hover={{ bg: "blue.400", color: "#fff" }}
+                w="auto"
+                leftIcon={<RiAddFill fontSize="20px" />}
+                borderRadius="none"
+                onClick={addSubCategoryHandler}
+              >
+                New Sub Category
+              </Button>
+
+              {/* PROPS */}
+              {isOpen && (
+                <DrawerComponent
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  fetchSubCategoryApi={fetchSubCategoryApi}
+                  getSubCategoryHandler={getSubCategoryHandler}
+                  editData={editData}
+                  disableEdit={disableEdit}
+                />
+              )}
+
+              <Stack>
+                <Pagination
+                  pagesCount={pagesCount}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
                 >
-                  New Material
-                </Button>
-                <Stack>
-                  <Pagination
-                    pagesCount={pagesCount}
-                    currentPage={currentPage}
-                    onPageChange={handlePageChange}
-                  >
-                    <PaginationContainer>
-                      <PaginationPrevious
+                  <PaginationContainer>
+                    <PaginationPrevious
+                      bg="primary"
+                      color="white"
+                      p={1}
+                      _hover={{ bg: "btnColor", color: "white" }}
+                      size="sm"
+                    >
+                      {"<<"}
+                    </PaginationPrevious>
+                    <PaginationPageGroup ml={1} mr={1}>
+                      {pages.map((page) => (
+                        <PaginationPage
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
+                          p={3}
+                          bg="primary"
+                          color="white"
+                          key={`pagination_page_${page}`}
+                          page={page}
+                          size="sm"
+                        />
+                      ))}
+                    </PaginationPageGroup>
+                    <HStack>
+                      <PaginationNext
                         bg="primary"
                         color="white"
                         p={1}
                         _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
+                        mb={2}
                       >
-                        {"<<"}
-                      </PaginationPrevious>
-                      <PaginationPageGroup ml={1} mr={1}>
-                        {pages.map((page) => (
-                          <PaginationPage
-                            _hover={{ bg: "btnColor", color: "white" }}
-                            _focus={{ bg: "btnColor" }}
-                            p={3}
-                            bg="primary"
-                            color="white"
-                            key={`pagination_page_${page}`}
-                            page={page}
-                            size="sm"
-                          />
-                        ))}
-                      </PaginationPageGroup>
-                      <HStack>
-                        <PaginationNext
-                          bg="primary"
-                          color="white"
-                          p={1}
-                          _hover={{ bg: "btnColor", color: "white" }}
-                          size="sm"
-                          mb={2}
-                        >
-                          {">>"}
-                        </PaginationNext>
-                        <Select
-                          onChange={handlePageSizeChange}
-                          bg="#FFFFFF"
-                          // size="sm"
-                          mb={2}
-                          variant="outline"
-                        >
-                          <option value={Number(5)}>5</option>
-                          <option value={Number(10)}>10</option>
-                          <option value={Number(25)}>25</option>
-                          <option value={Number(50)}>50</option>
-                        </Select>
-                      </HStack>
-                    </PaginationContainer>
-                  </Pagination>
-                </Stack>
-
-                {/* PROPS */}
-                {isOpen && (
-                  <DrawerComponent
-                    isOpen={isOpen}
-                    onClose={onClose}
-                    fetchMaterialApi={fetchMaterialApi}
-                    getMaterialHandler={getMaterialHandler}
-                    editData={editData}
-                    disableEdit={disableEdit}
-                  />
-                )}
-              </Flex>
-            </PageScroll>
+                        {">>"}
+                      </PaginationNext>
+                      <Select
+                        onChange={handlePageSizeChange}
+                        bg="#FFFFFF"
+                        // size="sm"
+                        mb={2}
+                        variant="outline"
+                      >
+                        <option value={Number(5)}>5</option>
+                        <option value={Number(10)}>10</option>
+                        <option value={Number(25)}>25</option>
+                        <option value={Number(50)}>50</option>
+                      </Select>
+                    </HStack>
+                  </PaginationContainer>
+                </Pagination>
+              </Stack>
+            </Flex>
           </Flex>
         </Flex>
       </Flex>
@@ -471,50 +452,36 @@ const MaterialsManagement = () => {
   );
 };
 
-export default MaterialsManagement;
+export default ItemSubCategory;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    itemCode: yup.string().required("Item code is required"),
-    itemDescription: yup.string().required("Description is required"),
-    itemCategoryId: yup.string().required("Item Category is required"),
-    uomId: yup.string().required("UOM is required"),
-    bufferLevel: yup
-      .number()
-      .required("Buffer level is required")
-      .typeError("Must be a number")
-      .positive("Negative value is not valid")
-      .integer()
-      .min(1, "Bufffer level must be greater than or equal to 1"),
+    itemCategoryId: yup.string().required("Item Category name is required"),
+    subcategoryName: yup.string().required("Sub Category name is required"),
   }),
 });
 
 const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getMaterialHandler, editData, disableEdit } = props;
-
-  const [subCategory, setSubCategory] = useState([]);
-  const [itemCategoryName, setItemCategory] = useState("");
-  const [uom, setUom] = useState([]);
+  const { isOpen, onClose, getSubCategoryHandler, editData, disableEdit } =
+    props;
+  const [category, setCategory] = useState([]);
   const toast = useToast();
 
-  // //FETCH UNTAGGED MODULES
-  // const fetchSubCatApi = async (moduleId) => {
-  //   const roleId = taggingData?.roleId
-  //   const res = await request.get(
-  //     `Role/GetUntagModuleByRoleId/${roleId}/${moduleId}`
-  //   )
-  //   return res.data
-  // }
+  const fetchCategory = async () => {
+    try {
+      const res = await request.get("Material/GetAllActiveItemCategory");
+      setCategory(res.data);
+    } catch (error) {}
+  };
 
-  // //GET/SHOW UNTAGGED MODULES
-  // const getSubCat = () => {
-  //   fetchUntaggedApi(moduleId).then(res => {
-  //     setUntagModules(res)
-  //   })
-  // }
+  useEffect(() => {
+    try {
+      fetchCategory();
+    } catch (error) {}
+  }, []);
 
   const {
     register,
@@ -528,70 +495,28 @@ const DrawerComponent = (props) => {
     defaultValues: {
       formData: {
         id: "",
-        itemCode: "",
-        itemDescription: "",
         itemCategoryId: "",
-        uomId: "",
-        bufferLevel: "",
+        subcategoryName: "",
         addedBy: currentUser?.userName,
         modifiedBy: "",
       },
     },
   });
 
-  const fetchItemCat = async () => {
-    try {
-      const res = await request.get("Material/GetAllActiveItemCategory");
-      setItemCategory(res.data);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    try {
-      fetchItemCat();
-    } catch (error) {}
-  }, []);
-
-  const fetchSubCat = async () => {
-    try {
-      const res = await request.get("Material/GetAllActiveSubCategory");
-      setSubCategory(res.data);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    try {
-      fetchSubCat();
-    } catch (error) {}
-  }, []);
-
-  const fetchUom = async () => {
-    try {
-      const res = await request.get("Uom/GetAllActiveUoms");
-      setUom(res.data);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    try {
-      fetchUom();
-    } catch (error) {}
-  }, []);
-
   const submitHandler = async (data) => {
     try {
       if (data.formData.id === "") {
         delete data.formData["id"];
         const res = await request
-          .post(`Material/AddNewMaterial`, data.formData)
+          .post("Material/AddNewSubCategory", data.formData)
           .then((res) => {
             ToastComponent(
               "Success",
-              "New Material created!",
+              "New Sub Category created!",
               "success",
               toast
             );
-            getMaterialHandler();
+            getSubCategoryHandler();
             onClose();
           })
           .catch((err) => {
@@ -600,10 +525,10 @@ const DrawerComponent = (props) => {
           });
       } else {
         const res = await request
-          .put(`Material/UpdateMaterials`, data.formData)
+          .put(`Material/UpdateSubCategory`, data.formData)
           .then((res) => {
-            ToastComponent("Success", "Material Updated", "success", toast);
-            getMaterialHandler();
+            ToastComponent("Success", "Sub Category Updated", "success", toast);
+            getSubCategoryHandler();
             onClose(onClose);
           })
           .catch((error) => {
@@ -618,19 +543,14 @@ const DrawerComponent = (props) => {
     } catch (err) {}
   };
 
-  // console.log(editData);
-
   useEffect(() => {
     if (editData.id) {
       setValue(
         "formData",
         {
           id: editData.id,
-          itemCode: editData?.itemCode,
-          itemDescription: editData?.itemDescription,
-          itemCategoryId: editData?.itemCategoryId,
-          uomId: editData?.uomId,
-          bufferLevel: editData?.bufferLevel,
+          categoryId: editData?.itemCategoryId,
+          subcategoryName: editData?.subcategoryName,
           modifiedBy: currentUser.userName,
         },
         { shouldValidate: true }
@@ -638,7 +558,7 @@ const DrawerComponent = (props) => {
     }
   }, [editData]);
 
-  // console.log(watch('formData.userRoleId'))
+  // console.log(watch('formData'))
 
   return (
     <>
@@ -646,115 +566,44 @@ const DrawerComponent = (props) => {
         <DrawerOverlay />
         <form onSubmit={handleSubmit(submitHandler)}>
           <DrawerContent>
-            <DrawerHeader borderBottomWidth="1px">Material Form</DrawerHeader>
+            <DrawerHeader borderBottomWidth="1px">
+              Sub Category Form
+            </DrawerHeader>
             <DrawerCloseButton />
             <DrawerBody>
               <Stack spacing="7px">
                 <Box>
-                  <FormLabel>Item Code:</FormLabel>
+                  <FormLabel>Category Name:</FormLabel>
+                  {category.length > 0 ? (
+                    <Select
+                      color="black"
+                      {...register("formData.itemCategoryId")}
+                      placeholder="Select Category"
+                    >
+                      {category.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.itemCategoryName}
+                        </option>
+                      ))}
+                    </Select>
+                  ) : (
+                    "loading"
+                  )}
+                  <Text color="red" fontSize="xs">
+                    {errors.formData?.itemCategoryId?.message}
+                  </Text>
+                </Box>
+
+                <Box>
+                  <FormLabel>Sub Category:</FormLabel>
                   <Input
-                    {...register("formData.itemCode")}
-                    placeholder="Please enter Item Code"
+                    {...register("formData.subcategoryName")}
+                    placeholder="Please enter Sub Category name"
                     autoComplete="off"
                     autoFocus
-                    disabled={disableEdit}
-                    readOnly={disableEdit}
-                    _disabled={{ color: "black" }}
-                    bgColor={disableEdit && "gray.300"}
                   />
                   <Text color="red" fontSize="xs">
-                    {errors.formData?.itemCode?.message}
-                  </Text>
-                </Box>
-
-                <Box>
-                  <FormLabel>Item Description:</FormLabel>
-                  <Input
-                    {...register("formData.itemDescription")}
-                    placeholder="Please enter Description"
-                    autoComplete="off"
-                  />
-                  <Text color="red" fontSize="xs">
-                    {errors.formData?.itemDescription?.message}
-                  </Text>
-                </Box>
-
-                <Flex mt={3}></Flex>
-
-                <Box>
-                  <FormLabel>Item Sub Category:</FormLabel>
-                  {subCategory.length > 0 ? (
-                    <Select
-                      {...register("formData.itemCategoryId")}
-                      placeholder="Select Item Category"
-                    >
-                      {subCategory.map((subcat) => (
-                        <option key={subcat.id} value={subcat.id}>
-                          {subcat.subcategoryName}
-                        </option>
-                      ))}
-                    </Select>
-                  ) : (
-                    "loading"
-                  )}
-                  <Text color="red" fontSize="xs">
-                    {errors.formData?.itemCategoryId?.message}
-                  </Text>
-                </Box>
-
-                <Box>
-                  <FormLabel>Item Category:</FormLabel>
-                  {itemCategoryName.length > 0 ? (
-                    <Select
-                      {...register("formData.itemCategoryId")}
-                      placeholder="Select Item Category"
-                    >
-                      {itemCategoryName.map((itemCat) => (
-                        <option key={itemCat.id} value={itemCat.id}>
-                          {itemCat.itemCategoryName}
-                        </option>
-                      ))}
-                    </Select>
-                  ) : (
-                    "loading"
-                  )}
-                  <Text color="red" fontSize="xs">
-                    {errors.formData?.itemCategoryId?.message}
-                  </Text>
-                </Box>
-
-                <Box>
-                  <FormLabel>UOM:</FormLabel>
-                  {uom.length > 0 ? (
-                    <Select
-                      {...register("formData.uomId")}
-                      placeholder="Select UOM"
-                    >
-                      {uom.map((uoms) => (
-                        <option key={uoms.id} value={uoms.id}>
-                          {uoms.uomCode}
-                        </option>
-                      ))}
-                    </Select>
-                  ) : (
-                    "loading"
-                  )}
-                  <Text color="red" fontSize="xs">
-                    {errors.formData?.uomId?.message}
-                  </Text>
-                </Box>
-
-                <Box>
-                  <FormLabel>Buffer Level:</FormLabel>
-                  <Input
-                    {...register("formData.bufferLevel")}
-                    type="number"
-                    placeholder="Please enter Buffer Level"
-                    autoComplete="off"
-                    // type="number"
-                  />
-                  <Text color="red" fontSize="xs">
-                    {errors.formData?.bufferLevel?.message}
+                    {errors.formData?.subcategoryName?.message}
                   </Text>
                 </Box>
               </Stack>
@@ -763,7 +612,7 @@ const DrawerComponent = (props) => {
               <Button variant="outline" mr={3} onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" colorScheme="blue" disabled={!isValid}>
+              <Button type="submit" disabled={!isValid} colorScheme="blue">
                 Submit
               </Button>
             </DrawerFooter>

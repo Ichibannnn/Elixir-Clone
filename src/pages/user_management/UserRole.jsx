@@ -35,21 +35,22 @@ import {
   PopoverCloseButton,
   VStack,
   Portal,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { FaSearch, FaUserTag } from 'react-icons/fa'
-import { RiAddFill } from 'react-icons/ri'
-import { FiSearch } from 'react-icons/fi'
-import { GiChoice } from 'react-icons/gi'
-import PageScroll from '../../utils/PageScroll'
-import request from '../../services/ApiClient'
-import { ToastComponent } from '../../components/Toast'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { decodeUser } from '../../services/decode-user'
+  Image,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { AiTwotoneEdit } from "react-icons/ai";
+import { FaSearch, FaUserTag } from "react-icons/fa";
+import { RiAddFill } from "react-icons/ri";
+import { FiSearch } from "react-icons/fi";
+import { GiChoice } from "react-icons/gi";
+import PageScroll from "../../utils/PageScroll";
+import request from "../../services/ApiClient";
+import { ToastComponent } from "../../components/Toast";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -58,33 +59,33 @@ import {
   PaginationPrevious,
   PaginationContainer,
   PaginationPageGroup,
-} from '@ajna/pagination'
-import DrawerTaggingComponent from './DrawerTaggingComponent'
+} from "@ajna/pagination";
+import DrawerTaggingComponent from "./DrawerTaggingComponent";
 
 const UserRole = () => {
-  const [roles, setRoles] = useState([])
-  const [editData, setEditData] = useState([])
-  const [status, setStatus] = useState(true)
-  const [search, setSearch] = useState('')
-  const toast = useToast()
-  const currentUser = decodeUser()
+  const [roles, setRoles] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
+  const toast = useToast();
+  const currentUser = decodeUser();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [pageTotal, setPageTotal] = useState(undefined)
-  const [disableEdit, setDisableEdit] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageTotal, setPageTotal] = useState(undefined);
+  const [disableEdit, setDisableEdit] = useState(false);
 
   // FETCH API ROLES:
   const fetchRolesApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `Role/GetAllRoleWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`,
-    )
+      `Role/GetAllRoleWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+    );
 
-    return response.data
-  }
+    return response.data;
+  };
 
   //PAGINATION
-  const outerLimit = 2
-  const innerLimit = 2
+  const outerLimit = 2;
+  const innerLimit = 2;
   const {
     currentPage,
     setCurrentPage,
@@ -99,103 +100,103 @@ const UserRole = () => {
       inner: innerLimit,
     },
     initialState: { currentPage: 1, pageSize: 5 },
-  })
+  });
 
   const handlePageChange = (nextPage) => {
-    setCurrentPage(nextPage)
-  }
+    setCurrentPage(nextPage);
+  };
 
   const handlePageSizeChange = (e) => {
-    const pageSize = Number(e.target.value)
-    setPageSize(pageSize)
-  }
+    const pageSize = Number(e.target.value);
+    setPageSize(pageSize);
+  };
 
   //STATUS
   const statusHandler = (data) => {
-    setStatus(data)
-  }
+    setStatus(data);
+  };
 
   const changeStatusHandler = (id, isActive) => {
-    let routeLabel
+    let routeLabel;
     if (isActive) {
-      routeLabel = 'InActiveRoles'
+      routeLabel = "InActiveRoles";
     } else {
-      routeLabel = 'ActivateRoles'
+      routeLabel = "ActivateRoles";
     }
 
     request
       .put(`/Role/${routeLabel}`, { id: id })
       .then((res) => {
-        ToastComponent('Success', 'Status updated', 'success', toast)
-        getRolesHandler()
+        ToastComponent("Success", "Status updated", "success", toast);
+        getRolesHandler();
       })
       .catch((err) => {
-        console.log(err)
-      })
+        console.log(err);
+      });
     // console.log(routeLabel)
-  }
+  };
 
   //SHOW ROLES DATA----
   const getRolesHandler = () => {
     fetchRolesApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false)
-      setRoles(res)
-      setPageTotal(res.totalCount)
-    })
-  }
+      setIsLoading(false);
+      setRoles(res);
+      setPageTotal(res.totalCount);
+    });
+  };
 
   useEffect(() => {
-    getRolesHandler()
+    getRolesHandler();
 
     return () => {
-      setRoles([])
-    }
-  }, [currentPage, pageSize, status, search])
+      setRoles([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   // SEARCH
   const searchHandler = (inputValue) => {
-    setSearch(inputValue)
+    setSearch(inputValue);
     // console.log(inputValue)
-  }
+  };
 
   //ADD ROLE HANDLER---
   const addRolesHandler = () => {
     setEditData({
-      id: '',
-      roleName: '',
+      id: "",
+      roleName: "",
       addedBy: currentUser.userName,
-      modifiedBy: '',
-    })
-    onOpen()
-    setDisableEdit(false)
+      modifiedBy: "",
+    });
+    onOpen();
+    setDisableEdit(false);
     // reset()
-  }
+  };
 
   //EDIT ROLE--
   const editRolesHandler = (role) => {
-    setDisableEdit(true)
-    setEditData(role)
-    onOpen()
+    setDisableEdit(true);
+    setEditData(role);
+    onOpen();
     // console.log(role.roleName)
-  }
+  };
 
   //FOR DRAWER (Drawer / Drawer Tagging)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isDrawerTaggingOpen,
     onOpen: openDrawerTagging,
     onClose: closeDrawerTagging,
-  } = useDisclosure()
+  } = useDisclosure();
 
   //MODULE TAGGING
   const [taggingParameter, setTaggingParameter] = useState({
-    roleId: '',
-    roleName: '',
-  })
+    roleId: "",
+    roleName: "",
+  });
   const moduleTaggingHandler = (id, roleName) => {
-    setTaggingParameter({ roleId: id, roleName: roleName })
-    openDrawerTagging()
-  }
+    setTaggingParameter({ roleId: id, roleName: roleName });
+    openDrawerTagging();
+  };
 
   return (
     <Flex
@@ -224,7 +225,7 @@ const UserRole = () => {
                   bg="#E9EBEC"
                   placeholder="Search User Role"
                   borderColor="gray.400"
-                  _hover={{ borderColor: 'gray.400' }}
+                  _hover={{ borderColor: "gray.400" }}
                   onChange={(e) => searchHandler(e.target.value)}
                 />
               </InputGroup>
@@ -262,7 +263,13 @@ const UserRole = () => {
                   bg="gray.200"
                   variant="striped"
                 >
-                  <Thead bg="secondary" position="sticky" zIndex="docked" top={0} bgColor="secondary">
+                  <Thead
+                    bg="secondary"
+                    position="sticky"
+                    zIndex="docked"
+                    top={0}
+                    bgColor="secondary"
+                  >
                     <Tr fontSize="15px">
                       <Th color="#D6D6D6" fontSize="10px">
                         ID
@@ -297,18 +304,34 @@ const UserRole = () => {
                             <HStack>
                               <Button
                                 bg="none"
+                                p={0}
+                                size="sm"
                                 onClick={() => editRolesHandler(rol)}
                               >
-                                <AiTwotoneEdit />
+                                <AiTwotoneEdit fontSize="15px" />
                               </Button>
 
                               <Popover>
-                                {({ onClose }) => (
+                                {({ isOpen, onClose }) => (
                                   <>
                                     <PopoverTrigger>
-                                      <Button p={0} bg="none">
-                                        <GiChoice />
-                                      </Button>
+                                      {rol.isActive === true ? (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnon.png"
+                                            title="active"
+                                          />
+                                        </Button>
+                                      ) : (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnoff.png"
+                                            title="inactive"
+                                          />
+                                        </Button>
+                                      )}
                                     </PopoverTrigger>
                                     <Portal>
                                       <PopoverContent bg="primary" color="#fff">
@@ -336,7 +359,7 @@ const UserRole = () => {
                                               onClick={() =>
                                                 changeStatusHandler(
                                                   rol.id,
-                                                  rol.isActive,
+                                                  rol.isActive
                                                 )
                                               }
                                             >
@@ -375,9 +398,9 @@ const UserRole = () => {
                 fontSize="13px"
                 fontWeight="normal"
                 colorScheme="blue"
-                _hover={{ bg: 'blue.400', color: '#fff' }}
+                _hover={{ bg: "blue.400", color: "#fff" }}
                 w="auto"
-              leftIcon={<RiAddFill fontSize="20px" />}
+                leftIcon={<RiAddFill fontSize="20px" />}
                 borderRadius="none"
                 onClick={addRolesHandler}
               >
@@ -420,16 +443,16 @@ const UserRole = () => {
                       bg="primary"
                       color="white"
                       p={1}
-                      _hover={{ bg: 'btnColor', color: 'white' }}
+                      _hover={{ bg: "btnColor", color: "white" }}
                       size="sm"
                     >
-                      {'<<'}
+                      {"<<"}
                     </PaginationPrevious>
                     <PaginationPageGroup ml={1} mr={1}>
                       {pages.map((page) => (
                         <PaginationPage
-                          _hover={{ bg: 'btnColor', color: 'white' }}
-                          _focus={{ bg: 'btnColor' }}
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
                           p={3}
                           bg="primary"
                           color="white"
@@ -444,11 +467,11 @@ const UserRole = () => {
                         bg="primary"
                         color="white"
                         p={1}
-                        _hover={{ bg: 'btnColor', color: 'white' }}
+                        _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
                         mb={2}
                       >
-                        {'>>'}
+                        {">>"}
                       </PaginationNext>
                       <Select
                         onChange={handlePageSizeChange}
@@ -470,23 +493,23 @@ const UserRole = () => {
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default UserRole
+export default UserRole;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    roleName: yup.string().required('User Role is required'),
+    roleName: yup.string().required("User Role is required"),
   }),
-})
+});
 
-const currentUser = decodeUser()
+const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getRolesHandler, editData } = props
-  const toast = useToast()
+  const { isOpen, onClose, getRolesHandler, editData } = props;
+  const toast = useToast();
 
   const {
     register,
@@ -496,65 +519,65 @@ const DrawerComponent = (props) => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       formData: {
-        id: '',
-        roleName: '',
+        id: "",
+        roleName: "",
         addedBy: currentUser?.userName,
-        modifiedBy: '',
+        modifiedBy: "",
       },
     },
-  })
+  });
 
   const submitHandler = async (data) => {
     try {
-      if (data.formData.id === '') {
-        delete data.formData['id']
+      if (data.formData.id === "") {
+        delete data.formData["id"];
         const res = await request
-          .post('Role/AddNewRole', data.formData)
+          .post("Role/AddNewRole", data.formData)
           .then((res) => {
-            ToastComponent('Success', 'New Role created!', 'success', toast)
-            getRolesHandler()
-            onClose()
+            ToastComponent("Success", "New Role created!", "success", toast);
+            getRolesHandler();
+            onClose();
           })
           .catch((err) => {
-            ToastComponent('Error', err.response.data, 'error', toast)
-            data.formData.id = ''
-          })
+            ToastComponent("Error", err.response.data, "error", toast);
+            data.formData.id = "";
+          });
       } else {
         const res = await request
           .put(`Role/UpdateUserInfo`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'Role Updated', 'success', toast)
-            getRolesHandler()
-            onClose(onClose)
+            ToastComponent("Success", "Role Updated", "success", toast);
+            getRolesHandler();
+            onClose(onClose);
           })
           .catch((error) => {
             ToastComponent(
-              'Update Failed',
+              "Update Failed",
               error.response.data,
-              'warning',
-              toast,
-            )
-          })
+              "warning",
+              toast
+            );
+          });
       }
     } catch (err) {}
-  }
+  };
 
   useEffect(() => {
     if (editData.id) {
       setValue(
-        'formData',
+        "formData",
         {
           id: editData.id,
           roleName: editData?.roleName,
           modifiedBy: currentUser.userName,
         },
-        { shouldValidate: true },
-      )
+        { shouldValidate: true }
+      );
     }
-  }, [editData])
+  }, [editData]);
 
   // console.log(watch('formData'))
 
@@ -571,7 +594,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>User Role:</FormLabel>
                   <Input
-                    {...register('formData.roleName')}
+                    {...register("formData.roleName")}
                     placeholder="Please enter User Role"
                     autoComplete="off"
                     autoFocus
@@ -594,5 +617,5 @@ const DrawerComponent = (props) => {
         </form>
       </Drawer>
     </>
-  )
-}
+  );
+};

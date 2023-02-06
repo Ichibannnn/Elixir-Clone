@@ -35,20 +35,21 @@ import {
   PopoverCloseButton,
   VStack,
   Portal,
-} from '@chakra-ui/react'
-import React, { useState } from 'react'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { AiTwotoneEdit } from 'react-icons/ai'
-import { GiChoice } from 'react-icons/gi'
-import { FiSearch } from 'react-icons/fi'
-import { RiAddFill } from 'react-icons/ri'
-import PageScroll from '../../utils/PageScroll'
-import request from '../../services/ApiClient'
-import { ToastComponent } from '../../components/Toast'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { decodeUser } from '../../services/decode-user'
+  Image,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { AiTwotoneEdit } from "react-icons/ai";
+import { GiChoice } from "react-icons/gi";
+import { FiSearch } from "react-icons/fi";
+import { RiAddFill } from "react-icons/ri";
+import PageScroll from "../../utils/PageScroll";
+import request from "../../services/ApiClient";
+import { ToastComponent } from "../../components/Toast";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -57,32 +58,32 @@ import {
   PaginationPrevious,
   PaginationContainer,
   PaginationPageGroup,
-} from '@ajna/pagination'
+} from "@ajna/pagination";
 
 const UomManagement = () => {
-  const [uom, setUom] = useState([])
-  const [editData, setEditData] = useState([])
-  const [status, setStatus] = useState(true)
-  const [search, setSearch] = useState('')
-  const toast = useToast()
-  const currentUser = decodeUser()
+  const [uom, setUom] = useState([]);
+  const [editData, setEditData] = useState([]);
+  const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
+  const toast = useToast();
+  const currentUser = decodeUser();
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [pageTotal, setPageTotal] = useState(undefined)
-  const [disableEdit, setDisableEdit] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [pageTotal, setPageTotal] = useState(undefined);
+  const [disableEdit, setDisableEdit] = useState(false);
 
   // FETCH API ROLES:
   const fetchUomApi = async (pageNumber, pageSize, status, search) => {
     const response = await request.get(
-      `Uom/GetAllUomWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`,
-    )
+      `Uom/GetAllUomWithPaginationOrig/${status}?PageNumber=${pageNumber}&PageSize=${pageSize}&search=${search}`
+    );
 
-    return response.data
-  }
+    return response.data;
+  };
 
   //PAGINATION
-  const outerLimit = 2
-  const innerLimit = 2
+  const outerLimit = 2;
+  const innerLimit = 2;
   const {
     currentPage,
     setCurrentPage,
@@ -97,89 +98,89 @@ const UomManagement = () => {
       inner: innerLimit,
     },
     initialState: { currentPage: 1, pageSize: 5 },
-  })
+  });
 
   const handlePageChange = (nextPage) => {
-    setCurrentPage(nextPage)
-  }
+    setCurrentPage(nextPage);
+  };
 
   const handlePageSizeChange = (e) => {
-    const pageSize = Number(e.target.value)
-    setPageSize(pageSize)
-  }
+    const pageSize = Number(e.target.value);
+    setPageSize(pageSize);
+  };
 
   //STATUS
   const statusHandler = (data) => {
-    setStatus(data)
-  }
+    setStatus(data);
+  };
 
   const changeStatusHandler = (id, isActive) => {
-    let routeLabel
+    let routeLabel;
     // console.log(id)
     // console.log(isActive)
     if (isActive) {
-      routeLabel = 'InActiveUom'
+      routeLabel = "InActiveUom";
     } else {
-      routeLabel = 'ActivateUom'
+      routeLabel = "ActivateUom";
     }
 
     request
       .put(`Uom/${routeLabel}`, { id: id })
       .then((res) => {
-        ToastComponent('Success', 'Status updated', 'success', toast)
-        getUomHandler()
+        ToastComponent("Success", "Status updated", "success", toast);
+        getUomHandler();
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   //SHOW MAIN MENU DATA----
   const getUomHandler = () => {
     fetchUomApi(currentPage, pageSize, status, search).then((res) => {
-      setIsLoading(false)
-      setUom(res)
-      setPageTotal(res.totalCount)
-    })
-  }
+      setIsLoading(false);
+      setUom(res);
+      setPageTotal(res.totalCount);
+    });
+  };
 
   useEffect(() => {
-    getUomHandler()
+    getUomHandler();
 
     return () => {
-      setUom([])
-    }
-  }, [currentPage, pageSize, status, search])
+      setUom([]);
+    };
+  }, [currentPage, pageSize, status, search]);
 
   // SEARCH
   const searchHandler = (inputValue) => {
-    setSearch(inputValue)
+    setSearch(inputValue);
     // console.log(inputValue)
-  }
+  };
 
   //ADD MAIN MENU HANDLER---
   const addUomHandler = () => {
     setEditData({
-      id: '',
-      uomCode: '',
-      uomDescription: '',
+      id: "",
+      uomCode: "",
+      uomDescription: "",
       addedBy: currentUser.userName,
-      modifiedBy: '',
-    })
-    onOpen()
-    setDisableEdit(false)
-  }
+      modifiedBy: "",
+    });
+    onOpen();
+    setDisableEdit(false);
+  };
 
   //EDIT ROLE--
   const editUomHandler = (uoms) => {
-    setDisableEdit(true)
-    setEditData(uoms)
-    onOpen()
+    setDisableEdit(true);
+    setEditData(uoms);
+    onOpen();
     // console.log(mod.mainMenu)
-  }
+  };
 
   //FOR DRAWER (Drawer / Drawer Tagging)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex
@@ -195,24 +196,24 @@ const UomManagement = () => {
         <Flex flexDirection="column" gap={1} w="full">
           <Flex justifyContent="space-between" alignItems="center">
             <HStack w="25%" mt={3}>
-                <InputGroup size="sm">
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<FiSearch bg="black" fontSize="18px" />}
-                  />
-                  <Input
-                    borderRadius="lg"
-                    fontSize="13px"
-                    type="text"
-                    border="1px"
-                    bg="#E9EBEC"
-                    placeholder="Search Description"
-                    borderColor="gray.400"
-                    _hover={{ borderColor: 'gray.400' }}
-                    onChange={(e) => searchHandler(e.target.value)}
-                  />
-                </InputGroup>
-              </HStack>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<FiSearch bg="black" fontSize="18px" />}
+                />
+                <Input
+                  borderRadius="lg"
+                  fontSize="13px"
+                  type="text"
+                  border="1px"
+                  bg="#E9EBEC"
+                  placeholder="Search Description"
+                  borderColor="gray.400"
+                  _hover={{ borderColor: "gray.400" }}
+                  onChange={(e) => searchHandler(e.target.value)}
+                />
+              </InputGroup>
+            </HStack>
 
             <HStack flexDirection="row">
               <Text fontSize="12px">STATUS:</Text>
@@ -282,18 +283,33 @@ const UomManagement = () => {
                             <HStack>
                               <Button
                                 bg="none"
+                                size="sm"
                                 onClick={() => editUomHandler(uoms)}
                               >
-                                <AiTwotoneEdit />
+                                <AiTwotoneEdit fontSize="15px" />
                               </Button>
 
                               <Popover>
                                 {({ onClose }) => (
                                   <>
                                     <PopoverTrigger>
-                                      <Button p={0} bg="none">
-                                        <GiChoice />
-                                      </Button>
+                                      {uoms.isActive === true ? (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnon.png"
+                                            title="active"
+                                          />
+                                        </Button>
+                                      ) : (
+                                        <Button bg="none" size="md" p={0}>
+                                          <Image
+                                            boxSize="20px"
+                                            src="/images/turnoff.png"
+                                            title="inactive"
+                                          />
+                                        </Button>
+                                      )}
                                     </PopoverTrigger>
                                     <Portal>
                                       <PopoverContent bg="primary" color="#fff">
@@ -321,7 +337,7 @@ const UomManagement = () => {
                                               onClick={() =>
                                                 changeStatusHandler(
                                                   uoms.id,
-                                                  uoms.isActive,
+                                                  uoms.isActive
                                                 )
                                               }
                                             >
@@ -350,7 +366,7 @@ const UomManagement = () => {
                 colorScheme="blue"
                 fontSize="13px"
                 fontWeight="normal"
-                _hover={{ bg: 'blue.400', color: '#fff' }}
+                _hover={{ bg: "blue.400", color: "#fff" }}
                 w="auto"
                 leftIcon={<RiAddFill fontSize="20px" />}
                 borderRadius="none"
@@ -382,16 +398,16 @@ const UomManagement = () => {
                       bg="primary"
                       color="white"
                       p={1}
-                      _hover={{ bg: 'btnColor', color: 'white' }}
+                      _hover={{ bg: "btnColor", color: "white" }}
                       size="sm"
                     >
-                      {'<<'}
+                      {"<<"}
                     </PaginationPrevious>
                     <PaginationPageGroup ml={1} mr={1}>
                       {pages.map((page) => (
                         <PaginationPage
-                          _hover={{ bg: 'btnColor', color: 'white' }}
-                          _focus={{ bg: 'btnColor' }}
+                          _hover={{ bg: "btnColor", color: "white" }}
+                          _focus={{ bg: "btnColor" }}
                           p={3}
                           bg="primary"
                           color="white"
@@ -406,11 +422,11 @@ const UomManagement = () => {
                         bg="primary"
                         color="white"
                         p={1}
-                        _hover={{ bg: 'btnColor', color: 'white' }}
+                        _hover={{ bg: "btnColor", color: "white" }}
                         size="sm"
                         mb={2}
                       >
-                        {'>>'}
+                        {">>"}
                       </PaginationNext>
                       <Select
                         onChange={handlePageSizeChange}
@@ -433,24 +449,24 @@ const UomManagement = () => {
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  );
+};
 
-export default UomManagement
+export default UomManagement;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
     id: yup.string(),
-    uomCode: yup.string().required('Uom Code name is required'),
-    uomDescription: yup.string().required('Description name is required'),
+    uomCode: yup.string().required("Uom Code name is required"),
+    uomDescription: yup.string().required("Description name is required"),
   }),
-})
+});
 
-const currentUser = decodeUser()
+const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getUomHandler, editData, disableEdit } = props
-  const toast = useToast()
+  const { isOpen, onClose, getUomHandler, editData, disableEdit } = props;
+  const toast = useToast();
 
   const {
     register,
@@ -460,70 +476,69 @@ const DrawerComponent = (props) => {
     watch,
   } = useForm({
     resolver: yupResolver(schema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       formData: {
-        id: '',
-        uomCode: '',
-        uomDescription: '',
+        id: "",
+        uomCode: "",
+        uomDescription: "",
         addedBy: currentUser?.userName,
-        modifiedBy: '',
+        modifiedBy: "",
       },
     },
-  })
+  });
 
   const submitHandler = async (data) => {
     try {
-      if (data.formData.id === '') {
-        delete data.formData['id']
+      if (data.formData.id === "") {
+        delete data.formData["id"];
         const res = await request
-          .post('Uom/AddNewUom', data.formData)
+          .post("Uom/AddNewUom", data.formData)
           .then((res) => {
-            ToastComponent('Success', 'New UOM created!', 'success', toast)
-            getUomHandler()
-            onClose()
+            ToastComponent("Success", "New UOM created!", "success", toast);
+            getUomHandler();
+            onClose();
           })
           .catch((err) => {
-            ToastComponent('Error', err.response.data, 'error', toast)
-            data.formData.id = ''
-          })
+            ToastComponent("Error", err.response.data, "error", toast);
+            data.formData.id = "";
+          });
       } else {
         const res = await request
           .put(`Uom/UpdateUom`, data.formData)
           .then((res) => {
-            ToastComponent('Success', 'UOM Updated', 'success', toast)
-            getUomHandler()
-            onClose(onClose)
+            ToastComponent("Success", "UOM Updated", "success", toast);
+            getUomHandler();
+            onClose(onClose);
           })
           .catch((error) => {
             ToastComponent(
-              'Update Failed',
+              "Update Failed",
               error.response.data,
-              'warning',
-              toast,
-            )
-          })
+              "warning",
+              toast
+            );
+          });
       }
     } catch (err) {}
-  }
+  };
 
   useEffect(() => {
     if (editData.id) {
       setValue(
-        'formData',
+        "formData",
         {
           id: editData.id,
           uomCode: editData?.uomCode,
           uomDescription: editData?.uomDescription,
           modifiedBy: currentUser.userName,
         },
-        { shouldValidate: true },
-      )
+        { shouldValidate: true }
+      );
     }
-  }, [editData])
+  }, [editData]);
 
   // console.log(watch('formData'))
-
 
   return (
     <>
@@ -538,14 +553,14 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>UOM Code:</FormLabel>
                   <Input
-                    {...register('formData.uomCode')}
+                    {...register("formData.uomCode")}
                     placeholder="Please enter Main Menu name"
                     autoComplete="off"
                     autoFocus
                     disabled={disableEdit}
                     readOnly={disableEdit}
-                    _disabled={{ color: 'black' }}
-                    bgColor={disableEdit && 'gray.300'}
+                    _disabled={{ color: "black" }}
+                    bgColor={disableEdit && "gray.300"}
                   />
                   <Text color="red" fontSize="xs">
                     {errors.formData?.uomCode?.message}
@@ -554,7 +569,7 @@ const DrawerComponent = (props) => {
                 <Box>
                   <FormLabel>Description:</FormLabel>
                   <Input
-                    {...register('formData.uomDescription')}
+                    {...register("formData.uomDescription")}
                     placeholder="Please enter Main Menu name"
                     autoComplete="off"
                   />
@@ -576,5 +591,5 @@ const DrawerComponent = (props) => {
         </form>
       </Drawer>
     </>
-  )
-}
+  );
+};
