@@ -250,7 +250,7 @@ const UserAccount = () => {
           </Flex>
 
           <Flex w="full" flexDirection="column" gap={2}>
-            <PageScroll maxHeight="475px">
+            <PageScroll maxHeight="700px">
               {isLoading ? (
                 <Stack width="full">
                   <Skeleton height="20px" />
@@ -270,7 +270,7 @@ const UserAccount = () => {
                   variant="striped"
                 >
                   <Thead bg="secondary">
-                    <Tr fontSize="15px">
+                    <Tr>
                       <Th color="#D6D6D6" fontSize="10px">
                         ID
                       </Th>

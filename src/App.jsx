@@ -41,6 +41,12 @@ import ReceivedMaterials from "./pages/receiving/ReceivedMaterials";
 import ApprovalRejectMaterials from "./pages/receiving/ApprovalRejectMaterials";
 import WarehouseConfirmReject from "./pages/receiving/WarehouseConfirmReject";
 import ItemSubCategory from "./pages/setup/ItemSubCategory";
+import OrderingPage from "./OrderingPage";
+import Orders from "./pages/ordering/orders/Orders";
+import ImportOrder from "./pages/import/import_orders/ImportOrder";
+import PreparationSchedule from "./pages/ordering/preparation_schedule/PreparationSchedule";
+import ApprovalPage from "./pages/ordering/approval/ApprovalPage";
+import CalendarPage from "./pages/ordering/calendar/CalendarPage";
 
 const App = () => {
   const [menu, setMenu] = useState(null);
@@ -52,6 +58,7 @@ const App = () => {
 
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<MainContainer />}>
+            {/* SETUP */}
             <Route path="/setup" element={<SetupManagementPage />}>
               <Route path="/setup/uom-management" element={<UomManagement />} />
               <Route
@@ -96,6 +103,7 @@ const App = () => {
               />
             </Route>
 
+            {/* USER */}
             <Route path="/user" element={<UserManagementPage />}>
               <Route path="/user/user-account" element={<UserAccount />} />
               <Route path="/user/user-role" element={<UserRole />} />
@@ -109,10 +117,13 @@ const App = () => {
               />
             </Route>
 
+            {/* IMPORT */}
             <Route path="/import" element={<ImportPage />}>
               <Route path="/import/import-po" element={<ImportPO />} />
+              <Route path="/import/import-order" element={<ImportOrder />} />
             </Route>
 
+            {/* RECEIVING */}
             <Route path="/receiving" element={<ReceivingModule />}>
               <Route
                 path="/receiving/warehouse-receiving"
@@ -131,6 +142,17 @@ const App = () => {
                 path="/receiving/warehouse-confirmreject"
                 element={<WarehouseConfirmReject />}
               />
+            </Route>
+
+            {/* ORDERING */}
+            <Route path="/ordering" element={<OrderingPage />}>
+              <Route path="/ordering/orders" element={<Orders />} />
+              <Route
+                path="/ordering/preparation"
+                element={<PreparationSchedule />}
+              />{" "}
+              <Route path="/ordering/approval" element={<ApprovalPage />} />
+              <Route path="/ordering/calendar" element={<CalendarPage />} />
             </Route>
 
             <Route path="*" element={<ErrorPage />} />

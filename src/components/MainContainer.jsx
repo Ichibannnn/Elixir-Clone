@@ -17,21 +17,18 @@ const MainContainer = () => {
   useEffect(() => {
     setSidebarHandler(isMobile);
   }, [isMobile]);
-  
 
   return (
-
-      <Flex bgColor="background" maxHeight="100vh">
-        {isMobile || sidebarHandler || <Sidebar setNavbarData={setNavbarData} />}
-        <Flex flexDirection="column" width="full">
-          <Header setSidebarHandler={setSidebarHandler} />
-          {/* <Navbar navBarData={navBarData} /> */}
-          <PageScroll maxHeight="105vh">
-            <MainContent />
-          </PageScroll> 
-        </Flex>
+    <Flex bgColor="background" maxHeight="100vh">
+      {isMobile || sidebarHandler || <Sidebar setNavbarData={setNavbarData} />}
+      <Flex flexDirection="column" width="full">
+        <Header setSidebarHandler={setSidebarHandler} />
+        {/* <Navbar navBarData={navBarData} /> */}
+        <PageScroll maxHeight="105vh">
+          <MainContent />
+        </PageScroll>
       </Flex>
-    
+    </Flex>
   );
 };
 

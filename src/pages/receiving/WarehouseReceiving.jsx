@@ -245,19 +245,14 @@ const WarehouseReceiving = () => {
               </Stack>
             ) : (
               <Table
-                size="md"
+                size="sm"
                 width="full"
                 border="none"
                 boxShadow="md"
                 bg="gray.200"
                 variant="striped"
               >
-                <Thead
-                  bg="primary"
-                  position="sticky"
-                  top={0}
-                  bgColor="secondary"
-                >
+                <Thead bg="primary" position="sticky" top={0}>
                   <Tr>
                     <Th color="white" fontSize="9px">
                       PO Number
@@ -284,6 +279,9 @@ const WarehouseReceiving = () => {
                       Actual Remaining
                     </Th>
                     <Th color="white" fontSize="9px">
+                      Total Reject
+                    </Th>
+                    <Th color="white" fontSize="9px">
                       Action
                     </Th>
                   </Tr>
@@ -299,6 +297,7 @@ const WarehouseReceiving = () => {
                       <Td fontSize="11px">{pos.quantityOrdered}</Td>
                       <Td fontSize="11px">{pos.actualGood}</Td>
                       <Td fontSize="11px">{pos.actualRemaining}</Td>
+                      <Td fontSize="11px">{pos.totalReject}</Td>
                       <Td ml={3}>
                         <Flex>
                           <Box>

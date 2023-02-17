@@ -38,7 +38,7 @@ import {
   Portal,
   Image,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AiTwotoneEdit } from "react-icons/ai";
@@ -60,6 +60,7 @@ import {
   PaginationContainer,
   PaginationPageGroup,
 } from "@ajna/pagination";
+import { BsCheckLg } from "react-icons/bs";
 
 const MaterialsManagement = () => {
   const [materials, setMaterials] = useState([]);
@@ -72,6 +73,7 @@ const MaterialsManagement = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [pageTotal, setPageTotal] = useState(undefined);
   const [disableEdit, setDisableEdit] = useState(false);
+  const itemCategoryRef = useRef();
 
   // FETCH API MATERIALS:
   const fetchMaterialApi = async (pageNumber, pageSize, status, search) => {
@@ -134,8 +136,6 @@ const MaterialsManagement = () => {
 
   const changeStatusHandler = (id, isActive) => {
     let routeLabel;
-    // console.log(id)
-    // console.log(isActive)
     if (isActive) {
       routeLabel = "InActiveMaterial";
     } else {
@@ -165,7 +165,7 @@ const MaterialsManagement = () => {
       id: "",
       itemCode: "",
       itemDescription: "",
-      itemCategoryId: "",
+      subCategoryId: "",
       uomId: "",
       bufferLevel: "",
       addedBy: currentUser.userName,
@@ -275,7 +275,7 @@ const MaterialsManagement = () => {
                         Buffer Level
                       </Th>
                       <Th color="#D6D6D6" fontSize="10px">
-                        Name Date Added
+                        Date Added
                       </Th>
                       <Th color="#D6D6D6" fontSize="10px">
                         Added By
@@ -454,6 +454,7 @@ const MaterialsManagement = () => {
                 {/* PROPS */}
                 {isOpen && (
                   <DrawerComponent
+                    itemCategoryRef={itemCategoryRef}
                     isOpen={isOpen}
                     onClose={onClose}
                     fetchMaterialApi={fetchMaterialApi}
@@ -478,8 +479,9 @@ const schema = yup.object().shape({
     id: yup.string(),
     itemCode: yup.string().required("Item code is required"),
     itemDescription: yup.string().required("Description is required"),
-    itemCategoryId: yup.string().required("Item Category is required"),
-    uomId: yup.string().required("UOM is required"),
+    subCategoryId: yup.number().required("Sub Category is required"),
+    // itemCategoryId: yup.number().required("Sub Category is required"),
+    uomId: yup.number().required("UOM is required"),
     bufferLevel: yup
       .number()
       .required("Buffer level is required")
@@ -493,28 +495,20 @@ const schema = yup.object().shape({
 const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getMaterialHandler, editData, disableEdit } = props;
+  const {
+    isOpen,
+    onClose,
+    getMaterialHandler,
+    editData,
+    disableEdit,
+    itemCategoryRef,
+  } = props;
 
   const [subCategory, setSubCategory] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
   const [itemCategoryName, setItemCategory] = useState("");
   const [uom, setUom] = useState([]);
   const toast = useToast();
-
-  // //FETCH UNTAGGED MODULES
-  // const fetchSubCatApi = async (moduleId) => {
-  //   const roleId = taggingData?.roleId
-  //   const res = await request.get(
-  //     `Role/GetUntagModuleByRoleId/${roleId}/${moduleId}`
-  //   )
-  //   return res.data
-  // }
-
-  // //GET/SHOW UNTAGGED MODULES
-  // const getSubCat = () => {
-  //   fetchUntaggedApi(moduleId).then(res => {
-  //     setUntagModules(res)
-  //   })
-  // }
 
   const {
     register,
@@ -530,6 +524,7 @@ const DrawerComponent = (props) => {
         id: "",
         itemCode: "",
         itemDescription: "",
+        subCategoryId: "",
         itemCategoryId: "",
         uomId: "",
         bufferLevel: "",
@@ -539,22 +534,9 @@ const DrawerComponent = (props) => {
     },
   });
 
-  const fetchItemCat = async () => {
-    try {
-      const res = await request.get("Material/GetAllActiveItemCategory");
-      setItemCategory(res.data);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    try {
-      fetchItemCat();
-    } catch (error) {}
-  }, []);
-
   const fetchSubCat = async () => {
     try {
-      const res = await request.get("Material/GetAllActiveSubCategory");
+      const res = await request.get("Material/GetAllActiveSubcategoryDropDown");
       setSubCategory(res.data);
     } catch (error) {}
   };
@@ -564,6 +546,46 @@ const DrawerComponent = (props) => {
       fetchSubCat();
     } catch (error) {}
   }, []);
+
+  const categoryStatusHandler = (data) => {
+    const newData = JSON.parse(data);
+    if (data) {
+      setItemCategory(newData.subcategoryName);
+    } else {
+      setItemCategory("");
+    }
+  };
+
+  const categoryCategoryStatusHandler = (data) => {
+    const newData = JSON.parse(data);
+    if (data) {
+      setValue("formData.subCategoryId", newData.subCategoryId);
+      setValue("formData.itemCategoryName", newData.categoryName);
+    } else {
+      setValue("formData.subCategoryId", "");
+      setValue("formData.itemCategoryName", "");
+    }
+    console.log(newData);
+  };
+
+  // useEffect(() => {
+  //   console.log(itemCategoryRef);
+  // }, [watch("formData.subCategoryId")]);
+
+  const fetchItemCat = async () => {
+    try {
+      const res = await request.get(
+        `Material/GetAllSubcategoriesmaterial?category=${itemCategoryName}`
+      );
+      setCategoryData(res.data);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    try {
+      fetchItemCat();
+    } catch (error) {}
+  }, [itemCategoryName]);
 
   const fetchUom = async () => {
     try {
@@ -579,6 +601,7 @@ const DrawerComponent = (props) => {
   }, []);
 
   const submitHandler = async (data) => {
+    console.log(data);
     try {
       if (data.formData.id === "") {
         delete data.formData["id"];
@@ -618,8 +641,6 @@ const DrawerComponent = (props) => {
     } catch (err) {}
   };
 
-  // console.log(editData);
-
   useEffect(() => {
     if (editData.id) {
       setValue(
@@ -628,7 +649,8 @@ const DrawerComponent = (props) => {
           id: editData.id,
           itemCode: editData?.itemCode,
           itemDescription: editData?.itemDescription,
-          itemCategoryId: editData?.itemCategoryId,
+          subCategoryId: editData?.subCategoryId,
+
           uomId: editData?.uomId,
           bufferLevel: editData?.bufferLevel,
           modifiedBy: currentUser.userName,
@@ -638,7 +660,7 @@ const DrawerComponent = (props) => {
     }
   }, [editData]);
 
-  // console.log(watch('formData.userRoleId'))
+  console.log(watch("formData"));
 
   return (
     <>
@@ -685,12 +707,13 @@ const DrawerComponent = (props) => {
                   <FormLabel>Item Sub Category:</FormLabel>
                   {subCategory.length > 0 ? (
                     <Select
-                      {...register("formData.itemCategoryId")}
-                      placeholder="Select Item Category"
+                      // {...register("formData.subCategoryId")}
+                      placeholder="Select Sub Category"
+                      onChange={(e) => categoryStatusHandler(e.target.value)}
                     >
-                      {subCategory.map((subcat) => (
-                        <option key={subcat.id} value={subcat.id}>
-                          {subcat.subcategoryName}
+                      {subCategory.map((subCat, i) => (
+                        <option key={i} value={JSON.stringify(subCat)}>
+                          {subCat.subcategoryName}
                         </option>
                       ))}
                     </Select>
@@ -698,25 +721,31 @@ const DrawerComponent = (props) => {
                     "loading"
                   )}
                   <Text color="red" fontSize="xs">
-                    {errors.formData?.itemCategoryId?.message}
+                    {errors.formData?.subCategoryId?.message}
                   </Text>
                 </Box>
 
                 <Box>
                   <FormLabel>Item Category:</FormLabel>
-                  {itemCategoryName.length > 0 ? (
+                  {categoryData.length > 0 ? (
                     <Select
-                      {...register("formData.itemCategoryId")}
+                      ref={itemCategoryRef}
+                      // {...register("formData.itemCategoryId")}
                       placeholder="Select Item Category"
+                      onChange={(e) =>
+                        categoryCategoryStatusHandler(e.target.value)
+                      }
                     >
-                      {itemCategoryName.map((itemCat) => (
-                        <option key={itemCat.id} value={itemCat.id}>
-                          {itemCat.itemCategoryName}
+                      {categoryData.map((itemCat, i) => (
+                        <option key={i} value={JSON.stringify(itemCat)}>
+                          {itemCat.categoryName}
                         </option>
                       ))}
                     </Select>
                   ) : (
-                    "loading"
+                    <Select>
+                      <option>Select Item Category</option>
+                    </Select>
                   )}
                   <Text color="red" fontSize="xs">
                     {errors.formData?.itemCategoryId?.message}

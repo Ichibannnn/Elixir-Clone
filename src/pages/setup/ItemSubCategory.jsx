@@ -112,12 +112,13 @@ const ItemSubCategory = () => {
   //STATUS
   const statusHandler = (data) => {
     setStatus(data);
+    console.log(data);
   };
 
-  const changeStatusHandler = (id, isActive) => {
+  const changeStatusHandler = (subcategoryId, isActive) => {
     let routeLabel;
-    // console.log(id)
-    // console.log(isActive)
+    // console.log(subcategoryId);
+    console.log(isActive);
     if (isActive) {
       routeLabel = "InActiveSubCategory";
     } else {
@@ -125,7 +126,7 @@ const ItemSubCategory = () => {
     }
 
     request
-      .put(`Material/${routeLabel}`, { id: id })
+      .put(`Material/${routeLabel}`, { id: subcategoryId })
       .then((res) => {
         ToastComponent("Success", "Status updated", "success", toast);
         getSubCategoryHandler();
@@ -161,7 +162,7 @@ const ItemSubCategory = () => {
   //ADD SUB CATEGORY HANDLER---
   const addSubCategoryHandler = () => {
     setEditData({
-      id: "",
+      subcategoryId: "",
       itemCategoryId: "",
       subcategoryName: "",
       addedBy: currentUser.userName,
@@ -172,9 +173,9 @@ const ItemSubCategory = () => {
   };
 
   //EDIT SUB CATEGORY--
-  const editSubCategoryHandler = (subcategory) => {
+  const editSubCategoryHandler = (category) => {
     setDisableEdit(true);
-    setEditData(subcategory);
+    setEditData(category);
     onOpen();
     // console.log(mod.mainMenu)
   };
@@ -270,9 +271,9 @@ const ItemSubCategory = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {subCategory?.subcategory?.map((subcat, i) => (
+                    {subCategory?.category?.map((subcat, i) => (
                       <Tr key={i}>
-                        <Td fontSize="11px">{subcat.id}</Td>
+                        <Td fontSize="11px">{subcat.subcategoryId}</Td>
                         <Td fontSize="11px">{subcat.categoryName}</Td>
                         <Td fontSize="11px">{subcat.subcategoryName}</Td>
                         <Td fontSize="11px">{subcat.addedBy}</Td>
@@ -336,7 +337,7 @@ const ItemSubCategory = () => {
                                               size="sm"
                                               onClick={() =>
                                                 changeStatusHandler(
-                                                  subcat.id,
+                                                  subcat.subcategoryId,
                                                   subcat.isActive
                                                 )
                                               }
@@ -456,7 +457,7 @@ export default ItemSubCategory;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
-    id: yup.string(),
+    subcategoryId: yup.string(),
     itemCategoryId: yup.string().required("Item Category name is required"),
     subcategoryName: yup.string().required("Sub Category name is required"),
   }),
@@ -495,7 +496,7 @@ const DrawerComponent = (props) => {
     defaultValues: {
       formData: {
         id: "",
-        itemCategoryId: "",
+        categoryId: "",
         subcategoryName: "",
         addedBy: currentUser?.userName,
         modifiedBy: "",
@@ -521,7 +522,7 @@ const DrawerComponent = (props) => {
           })
           .catch((err) => {
             ToastComponent("Error", err.response.data, "error", toast);
-            data.formData.id = "";
+            data.formData.subcategoryId = "";
           });
       } else {
         const res = await request
@@ -544,18 +545,19 @@ const DrawerComponent = (props) => {
   };
 
   useEffect(() => {
-    if (editData.id) {
+    if (editData.subcategoryId) {
       setValue(
         "formData",
         {
-          id: editData.id,
-          categoryId: editData?.itemCategoryId,
+          id: editData.subcategoryId,
+          itemCategoryId: editData?.itemCategoryId,
           subcategoryName: editData?.subcategoryName,
           modifiedBy: currentUser.userName,
         },
         { shouldValidate: true }
       );
     }
+    console.log(editData);
   }, [editData]);
 
   // console.log(watch('formData'))

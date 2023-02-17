@@ -243,7 +243,7 @@ const ReceivedMaterials = () => {
               </Stack>
             ) : (
               <Table
-                size="md"
+                size="sm"
                 width="full"
                 border="none"
                 boxShadow="md"
@@ -400,8 +400,6 @@ const PrintModal = ({ isOpen, onClose, printData }) => {
           <VStack spacing={0} justifyContent="center" ref={componentRef}>
             <Text>{printData?.itemCode}</Text>
             <Text>{printData?.itemDescription}</Text>
-            {/* <Text>Expiration Days: {printData?.expirationDays}</Text> */}
-            {/* <Text>Expiration Date: {printData?.expirationDate}</Text> */}
             <VStack spacing={0} w="90%" ml={4} justifyContent="center">
               <Barcode width={2} height={30} value={printData?.warehouseId} />
             </VStack>

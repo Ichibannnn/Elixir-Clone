@@ -85,12 +85,7 @@ const CancelModal = ({ isOpen, onClose, getAvailablePOHandler, poId }) => {
               <Text fontSize="15px">Cancel Materials</Text>
             </Flex>
           </ModalHeader>
-          <Flex
-            borderColor="gray.100"
-            borderWidth="2px"
-            borderX="none"
-            borderTop="none"
-          ></Flex>
+
           <ModalCloseButton onClick={onClose} color="white" />
 
           <ModalBody>

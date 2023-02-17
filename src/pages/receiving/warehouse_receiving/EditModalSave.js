@@ -90,7 +90,7 @@ const EditModalSave = ({
             console.log(secondSubmit);
             try {
               const res = request.put(
-                `Receiving/RejectRawMaterialsByReceivingId`,
+                `Warehouse/RejectRawMaterialsByReceivingId`,
                 secondSubmit
               );
             } catch (err) {

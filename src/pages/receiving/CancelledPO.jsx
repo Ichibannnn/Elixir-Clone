@@ -236,7 +236,7 @@ const CancelledPO = () => {
               </Stack>
             ) : (
               <Table
-                size="md"
+                size="sm"
                 width="full"
                 border="none"
                 boxShadow="md"
