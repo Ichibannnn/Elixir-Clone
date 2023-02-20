@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
   Table,
   Tbody,
   Td,
@@ -40,7 +41,7 @@ export const CalendarList = ({ forMOData }) => {
   };
 
   return (
-    <>
+    <Flex bg="form" w="full" p={10}>
       <Box width="full">
         <FullCalendar
           height="84vh"
@@ -69,7 +70,7 @@ export const CalendarList = ({ forMOData }) => {
           dateStr={dateStr}
         />
       )}
-    </>
+    </Flex>
   );
 };
 
@@ -84,10 +85,11 @@ const ModalOfSchedules = ({ isOpen, onClose, forMOData, dateStr }) => {
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered size="5xl">
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>
             <Flex justifyContent="center">
-              <Text>Customer(s)</Text>
+              <Text fontSize="15px">Customer(s)</Text>
             </Flex>
           </ModalHeader>
           <ModalCloseButton onClick={onClose} />
@@ -95,10 +97,10 @@ const ModalOfSchedules = ({ isOpen, onClose, forMOData, dateStr }) => {
           <ModalBody mt={5}>
             <PageScrollImport minHeight="400px" maxHeight="500px">
               <Table size="sm">
-                <Thead bgColor="secondary">
+                <Thead bgColor="primary">
                   <Tr>
                     {TableHead?.map((head, i) => (
-                      <Th key={i} color="white">
+                      <Th key={i} color="white" fontSize="9px">
                         {head}
                       </Th>
                     ))}
@@ -109,12 +111,12 @@ const ModalOfSchedules = ({ isOpen, onClose, forMOData, dateStr }) => {
                     moment(item.preparedDate).format("yyyy-MM-DD") ===
                     dateStr ? (
                       <Tr key={i}>
-                        <Td>{item.customerCode}</Td>
-                        <Td>{item.customerName}</Td>
-                        <Td>
+                        <Td fontSize="12px">{item.customerCode}</Td>
+                        <Td fontSize="12px">{item.customerName}</Td>
+                        <Td fontSize="12px">
                           {moment(item.preparedDate).format("yyyy/MM/DD")}
                         </Td>
-                        <Td>{item.totalOrders}</Td>
+                        <Td fontSize="12px">{item.totalOrders}</Td>
                       </Tr>
                     ) : null
                   )}

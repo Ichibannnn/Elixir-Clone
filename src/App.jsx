@@ -47,6 +47,8 @@ import ImportOrder from "./pages/import/import_orders/ImportOrder";
 import PreparationSchedule from "./pages/ordering/preparation_schedule/PreparationSchedule";
 import ApprovalPage from "./pages/ordering/approval/ApprovalPage";
 import CalendarPage from "./pages/ordering/calendar/CalendarPage";
+import InventoryPage from "./InventoryPage";
+import MoveOrder from "./pages/inventory/MoveOrder";
 
 const App = () => {
   const [menu, setMenu] = useState(null);
@@ -153,6 +155,11 @@ const App = () => {
               />{" "}
               <Route path="/ordering/approval" element={<ApprovalPage />} />
               <Route path="/ordering/calendar" element={<CalendarPage />} />
+            </Route>
+
+            {/* INVENTORY */}
+            <Route path="/inventory" element={<InventoryPage />}>
+              <Route path="/inventory/move-order" element={<MoveOrder />} />
             </Route>
 
             <Route path="*" element={<ErrorPage />} />
