@@ -26,10 +26,10 @@ import {
 } from "@ajna/pagination";
 import PageScrollImport from "../../components/PageScrollImport";
 import { VscCircleLargeFilled } from "react-icons/vsc";
-import { GoArrowSmallRight } from "react-icons/go";
-import { FaSort } from "react-icons/fa";
+import { BiRightArrow } from "react-icons/bi";
+import { FaArrowAltCircleRight, FaSort } from "react-icons/fa";
 import moment from "moment";
-// import { CancelApprovedDate } from './Action-Modals'
+import { CancelApprovedDate, CancelConfirmation } from "./ActionModal";
 
 export const ListofApprovedDate = ({
   customerName,
@@ -121,10 +121,10 @@ export const ListofApprovedDate = ({
     <Flex w="full" flexDirection="column">
       <Flex w="full" justifyContent="space-between">
         <HStack w="40%">
-          <Badge bgColor="secondary" color="white" px={3}>
+          <Badge bgColor="secondary" fontSize="10px" color="white" px={1}>
             Customer:{" "}
           </Badge>
-          <Text fontSize="sm">{customerName && customerName}</Text>
+          <Text fontSize="13px">{customerName && customerName}</Text>
         </HStack>
 
         <Flex>
@@ -138,7 +138,7 @@ export const ListofApprovedDate = ({
                 border="1px"
                 fontSize="xs"
                 px={2}
-                _hover={{ bg: "accent", color: "white" }}
+                _hover={{ bg: "blue.200", color: "white" }}
               >
                 {"< Previous"}
               </PaginationPrevious>
@@ -149,7 +149,7 @@ export const ListofApprovedDate = ({
                 border="1px"
                 fontSize="xs"
                 px={4}
-                _hover={{ bg: "accent", color: "white" }}
+                _hover={{ bg: "blue.200", color: "white" }}
               >
                 {"Next >"}
               </PaginationNext>
@@ -158,52 +158,48 @@ export const ListofApprovedDate = ({
         </Flex>
       </Flex>
 
-      {buttonChanger ? (
-        <VStack spacing={1}>
-          <HStack w="full" justifyContent="start">
-            <Badge bgColor="primary" color="white" px={3}>
-              Delivery Status:{" "}
-            </Badge>
-            <Text
-              onChange={(e) => setDeliveryStatus(e.target.value)}
-              placeholder=" "
-              w="15%"
-              size="xs"
-              bgColor="#fff8dc"
-            >
-              Pick Up
-            </Text>
-          </HStack>
-          <HStack w="full" justifyContent="start">
-            <Badge bgColor="secondary" color="white" px={4}>
-              Batch Number:{" "}
-            </Badge>
-            <Select
-              onChange={(e) => setBatchNumber(e.target.value)}
-              placeholder=" "
-              w="15%"
-              size="xs"
-              bgColor="#fff8dc"
-            >
-              <option>{`${moment(new Date()).format("YYYY")} - 1`}</option>
-              <option>{`${moment(new Date()).format("YYYY")} - 2`}</option>
-              <option>{`${moment(new Date()).format("YYYY")} - 3`}</option>
-              <option>{`${moment(new Date()).format("YYYY")} - 4`}</option>
-              <option>{`${moment(new Date()).format("YYYY")} - 5`}</option>
-              <option>{`${moment(new Date()).format("YYYY")} - 6`}</option>
-              <option>{`${moment(new Date()).format("YYYY")} - 7`}</option>
-            </Select>
-          </HStack>
-        </VStack>
-      ) : (
-        ""
-      )}
+      <VStack spacing={1}>
+        <HStack w="full" justifyContent="start">
+          <Badge bgColor="primary" fontSize="10px" color="white" px={1}>
+            Delivery Status:{" "}
+          </Badge>
+          <Text
+            onChange={(e) => setDeliveryStatus(e.target.value)}
+            placeholder=" "
+            w="15%"
+            fontSize="13px"
+            // bgColor="#fff8dc"
+          >
+            Pick Up
+          </Text>
+        </HStack>
+        <HStack w="full" justifyContent="start">
+          <Badge bgColor="primary" fontSize="10px" color="white" px={1}>
+            Batch Number:{" "}
+          </Badge>
+          <Select
+            onChange={(e) => setBatchNumber(e.target.value)}
+            placeholder=" "
+            w="15%"
+            size="xs"
+            bgColor="#fff8dc"
+          >
+            <option>{`${moment(new Date()).format("YYYY")} - 1`}</option>
+            <option>{`${moment(new Date()).format("YYYY")} - 2`}</option>
+            <option>{`${moment(new Date()).format("YYYY")} - 3`}</option>
+            <option>{`${moment(new Date()).format("YYYY")} - 4`}</option>
+            <option>{`${moment(new Date()).format("YYYY")} - 5`}</option>
+            <option>{`${moment(new Date()).format("YYYY")} - 6`}</option>
+            <option>{`${moment(new Date()).format("YYYY")} - 7`}</option>
+          </Select>
+        </HStack>
+      </VStack>
 
       <VStack w="full" spacing={0} justifyContent="center" mt={6}>
         <Text
           w="full"
           fontWeight="semibold"
-          fontSize="md"
+          fontSize="11px"
           bgColor="primary"
           color="white"
           textAlign="center"
@@ -214,13 +210,25 @@ export const ListofApprovedDate = ({
           <Table size="sm" variant="simple">
             <Thead bgColor="secondary">
               <Tr>
-                <Th color="white">Line</Th>
-                <Th color="white">Order ID</Th>
-                <Th color="white">Customer Code</Th>
-                <Th color="white">Customer Name</Th>
-                <Th color="white">Category</Th>
-                <Th color="white">Total Quantity Order</Th>
-                <Th color="white">
+                <Th color="white" fontSize="9px">
+                  Line
+                </Th>
+                <Th color="white" fontSize="9px">
+                  Order ID
+                </Th>
+                <Th color="white" fontSize="9px">
+                  Customer Code
+                </Th>
+                <Th color="white" fontSize="9px">
+                  Customer Name
+                </Th>
+                <Th color="white" fontSize="9px">
+                  Category
+                </Th>
+                <Th color="white" fontSize="9px">
+                  Total Quantity Order
+                </Th>
+                <Th color="white" fontSize="9px">
                   <HStack>
                     <Text>Prepared Date</Text>
                     <Button
@@ -237,7 +245,9 @@ export const ListofApprovedDate = ({
                     </Button>
                   </HStack>
                 </Th>
-                <Th color="white">Cancel</Th>
+                <Th color="white" fontSize="9px">
+                  Cancel
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -256,21 +266,26 @@ export const ListofApprovedDate = ({
                 >
                   {orderId === order.id ? (
                     <Td>
-                      <GoArrowSmallRight fontSize="27px" />
+                      <FaArrowAltCircleRight fontSize="16px" />
                     </Td>
                   ) : (
-                    <Td>{i + 1}</Td>
+                    <Td fontSize="11px">{i + 1}</Td>
                   )}
-                  <Td>{order.id}</Td>
-                  <Td>{order.customerCode}</Td>
-                  <Td>{order.customerName}</Td>
-                  <Td>{order.category}</Td>
-                  <Td>{order.totalOrders}</Td>
-                  <Td>{moment(order.preparedDate).format("MM/DD/yyyy")}</Td>
-                  <Td>
+                  <Td fontSize="11px">{order.id}</Td>
+                  <Td fontSize="11px">{order.customerCode}</Td>
+                  <Td fontSize="11px">{order.customerName}</Td>
+                  <Td fontSize="11px">{order.category}</Td>
+                  <Td fontSize="11px">{order.totalOrders}</Td>
+                  <Td fontSize="11px">
+                    {moment(order.preparedDate).format("MM/DD/yyyy")}
+                  </Td>
+                  <Td fontSize="11px">
                     <Button
                       size="xs"
-                      colorScheme="red"
+                      color="white"
+                      bg="gray.500"
+                      borderRadius="none"
+                      _hover={{ bg: "gray.400" }}
                       onClick={() => cancelHandler(order.id)}
                       disabled={preparedLength > 0}
                       title={
@@ -289,16 +304,15 @@ export const ListofApprovedDate = ({
         </PageScrollImport>
       </VStack>
 
-      {/* {
-                isCancel && (
-                    <CancelApprovedDate
-                        isOpen={isCancel}
-                        onClose={closeCancel}
-                        id={orderId} setOrderId={setOrderId}
-                        fetchApprovedMoveOrders={fetchApprovedMoveOrders}
-                    />
-                )
-            } */}
+      {isCancel && (
+        <CancelApprovedDate
+          isOpen={isCancel}
+          onClose={closeCancel}
+          id={orderId}
+          setOrderId={setOrderId}
+          fetchApprovedMoveOrders={fetchApprovedMoveOrders}
+        />
+      )}
     </Flex>
   );
 };
