@@ -294,9 +294,24 @@ const WarehouseReceiving = () => {
                       <Td fontSize="11px">{pos.itemDescription}</Td>
                       <Td fontSize="11px">{pos.supplier}</Td>
                       <Td fontSize="11px">{pos.uom}</Td>
-                      <Td fontSize="11px">{pos.quantityOrdered}</Td>
-                      <Td fontSize="11px">{pos.actualGood}</Td>
-                      <Td fontSize="11px">{pos.actualRemaining}</Td>
+                      <Td fontSize="11px">
+                        {pos.quantityOrdered.toLocaleString(undefined, {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2,
+                        })}
+                      </Td>
+                      <Td fontSize="11px">
+                        {pos.actualGood.toLocaleString(undefined, {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2,
+                        })}
+                      </Td>
+                      <Td fontSize="11px">
+                        {pos.actualRemaining.toLocaleString(undefined, {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2,
+                        })}
+                      </Td>
                       <Td fontSize="11px">{pos.totalReject}</Td>
                       <Td ml={3}>
                         <Flex>

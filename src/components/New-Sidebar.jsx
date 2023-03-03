@@ -84,6 +84,8 @@ const SidebarList = () => {
       }
       setTagModules(unique);
     });
+
+    console.log(tagModules);
   };
 
   useEffect(() => {
@@ -108,22 +110,16 @@ const SidebarList = () => {
             // }
             bgColor={pathname.includes(sidebarMenu.path) ? "accent" : ""}
             fontWeight="semibold"
-            color='white' 
+            color="white"
           >
-
             <AccordionButton
               onClick={() => setMenu(sidebarMenu.subMenu)}
               w="full"
               justifyContent="space-between"
               color="white"
               fontSize="xs"
-              
             >
-              <Text 
-              fontWeight="semibold" 
-              textAlign="start" 
-              color="white"
-              >
+              <Text fontWeight="semibold" textAlign="start" color="white">
                 {sidebarMenu.mainMenu}
               </Text>
               <AccordionIcon color="white" />
@@ -145,12 +141,11 @@ const SidebarList = () => {
                         borderStyle={
                           pathname.includes(sub.path) ? "groove" : "dashed"
                         }
-                        _focus={{ bg: 'buttonColor' }}
+                        _focus={{ bg: "buttonColor" }}
                         _hover={{
                           bg: "whiteAlpha.200",
-                          color: "white"
+                          color: "white",
                         }}
-                        
                       >
                         {sub.title}
                       </Text>

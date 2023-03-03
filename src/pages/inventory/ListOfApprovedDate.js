@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Badge,
+  Box,
   Button,
   Flex,
   HStack,
@@ -30,6 +31,7 @@ import { BiRightArrow } from "react-icons/bi";
 import { FaArrowAltCircleRight, FaSort } from "react-icons/fa";
 import moment from "moment";
 import { CancelApprovedDate, CancelConfirmation } from "./ActionModal";
+import PageScroll from "../../utils/PageScroll";
 
 export const ListofApprovedDate = ({
   customerName,
@@ -117,6 +119,11 @@ export const ListofApprovedDate = ({
     }
   };
 
+  const selectedValue = () => {
+    const option = [{ name: "Pick-Up" }];
+    const selectedId = 0;
+  };
+
   return (
     <Flex w="full" flexDirection="column">
       <Flex w="full" justifyContent="space-between">
@@ -139,10 +146,12 @@ export const ListofApprovedDate = ({
                 fontSize="xs"
                 px={2}
                 _hover={{ bg: "blue.200", color: "white" }}
+                borderRadius="none"
+                size="sm"
               >
                 {"< Previous"}
               </PaginationPrevious>
-              <Text mx={1} bgColor="primary" color="white" px={2} pt={1.5}>
+              <Text mx={1} bgColor="primary" color="white" px={2} pt={1}>
                 {currentPage}
               </Text>
               <PaginationNext
@@ -150,6 +159,8 @@ export const ListofApprovedDate = ({
                 fontSize="xs"
                 px={4}
                 _hover={{ bg: "blue.200", color: "white" }}
+                borderRadius="none"
+                size="sm"
               >
                 {"Next >"}
               </PaginationNext>
@@ -158,55 +169,59 @@ export const ListofApprovedDate = ({
         </Flex>
       </Flex>
 
-      <VStack spacing={1}>
-        <HStack w="full" justifyContent="start">
-          <Badge bgColor="primary" fontSize="10px" color="white" px={1}>
-            Delivery Status:{" "}
-          </Badge>
-          <Text
-            onChange={(e) => setDeliveryStatus(e.target.value)}
-            placeholder=" "
-            w="15%"
-            fontSize="13px"
-            // bgColor="#fff8dc"
-          >
-            Pick Up
-          </Text>
-        </HStack>
-        <HStack w="full" justifyContent="start">
-          <Badge bgColor="primary" fontSize="10px" color="white" px={1}>
-            Batch Number:{" "}
-          </Badge>
-          <Select
-            onChange={(e) => setBatchNumber(e.target.value)}
-            placeholder=" "
-            w="15%"
-            size="xs"
-            bgColor="#fff8dc"
-          >
-            <option>{`${moment(new Date()).format("YYYY")} - 1`}</option>
-            <option>{`${moment(new Date()).format("YYYY")} - 2`}</option>
-            <option>{`${moment(new Date()).format("YYYY")} - 3`}</option>
-            <option>{`${moment(new Date()).format("YYYY")} - 4`}</option>
-            <option>{`${moment(new Date()).format("YYYY")} - 5`}</option>
-            <option>{`${moment(new Date()).format("YYYY")} - 6`}</option>
-            <option>{`${moment(new Date()).format("YYYY")} - 7`}</option>
-          </Select>
-        </HStack>
-      </VStack>
-
+      {/* {buttonChanger ? (
+        <VStack spacing={1}>
+          <HStack w="full" justifyContent="start">
+            <Badge bgColor="primary" fontSize="10px" color="white" px={1}>
+              Delivery Status:{" "}
+            </Badge>
+            <Select
+              onChange={(e) => setDeliveryStatus(e.target.value)}
+              placeholder=" "
+              w="15%"
+              size="xs"
+              bgColor="#fff8dc"
+            >
+              <option>Pick-Up</option>
+            </Select>
+          </HStack>
+          <HStack w="full" justifyContent="start">
+            <Badge bgColor="primary" fontSize="10px" color="white" px={1}>
+              Batch Number:{" "}
+            </Badge>
+            <Select
+              onChange={(e) => setBatchNumber(e.target.value)}
+              placeholder=" "
+              w="15%"
+              size="xs"
+              bgColor="#fff8dc"
+            >
+              <option>{`${moment(new Date()).format("YYYY")} - 1`}</option>
+              <option>{`${moment(new Date()).format("YYYY")} - 2`}</option>
+              <option>{`${moment(new Date()).format("YYYY")} - 3`}</option>
+              <option>{`${moment(new Date()).format("YYYY")} - 4`}</option>
+              <option>{`${moment(new Date()).format("YYYY")} - 5`}</option>
+              <option>{`${moment(new Date()).format("YYYY")} - 6`}</option>
+              <option>{`${moment(new Date()).format("YYYY")} - 7`}</option>
+            </Select>
+          </HStack>
+        </VStack>
+      ) : (
+        ""
+      )} */}
       <VStack w="full" spacing={0} justifyContent="center" mt={6}>
-        <Text
-          w="full"
-          fontWeight="semibold"
-          fontSize="11px"
-          bgColor="primary"
-          color="white"
-          textAlign="center"
-        >
-          List of Approved Date
-        </Text>
-        <PageScrollImport minHeight="200px" maxHeight="210px">
+        <Box w="full" bgColor="primary" h="22px">
+          <Text
+            fontWeight="semibold"
+            fontSize="11px"
+            color="white"
+            textAlign="center"
+            justifyContent="center"
+          >
+            List of Approved Date
+          </Text>
+        </Box>
+        <PageScroll minHeight="150px" maxHeight="210px">
           <Table size="sm" variant="simple">
             <Thead bgColor="secondary">
               <Tr>
@@ -236,6 +251,7 @@ export const ListofApprovedDate = ({
                       onClick={() => {
                         setOrder(order === "asc" ? "desc" : "asc");
                       }}
+                      size="xs"
                       p={0}
                       m={0}
                       background="none"
@@ -282,6 +298,7 @@ export const ListofApprovedDate = ({
                   <Td fontSize="11px">
                     <Button
                       size="xs"
+                      fontSize="11px"
                       color="white"
                       bg="gray.500"
                       borderRadius="none"
@@ -301,7 +318,7 @@ export const ListofApprovedDate = ({
               ))}
             </Tbody>
           </Table>
-        </PageScrollImport>
+        </PageScroll>
       </VStack>
 
       {isCancel && (

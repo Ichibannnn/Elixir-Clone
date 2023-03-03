@@ -52,31 +52,35 @@ export const EditModal = ({
     defaultValues: {
       submitData: {
         po_summary_id: editData.id,
-        actual_delivered: "",
         expected_delivery: "",
+        actual_delivered: "",
         batch_no: "",
         addedBy: currentUser.userName,
       },
       displayData: {
         id: editData.id,
+        prNumber: editData.prNumber,
+        prDate: moment(editData.prDate).format("MM/DD/YYYY"),
+        poNumber: editData.poNumber,
+        poDate: moment(editData.poDate).format("MM/DD/YYYY"),
         itemCode: editData.itemCode,
         itemDescription: editData.itemDescription,
         supplier: editData.supplier,
-        actualDelivered: editData.actualDelivered,
-        checkingDate: moment().format("MM/DD/YYYY"),
-        poNumber: editData.poNumber,
-        poDate: moment(editData.poDate).format("MM/DD/YYYY"),
-        prDate: moment(editData.prDate).format("MM/DD/YYYY"),
-        prNumber: editData.prNumber,
+        uom: editData.uom,
         quantityOrdered: editData.quantityOrdered.toLocaleString(undefined, {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2,
         }),
-        uom: editData.uom,
+        actualGood: editData.actualGood.toLocaleString(undefined, {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2,
+        }),
+        checkingDate: moment().format("MM/DD/YYYY"),
         actualRemaining: editData.actualRemaining.toLocaleString(undefined, {
           maximumFractionDigits: 2,
           minimumFractionDigits: 2,
         }),
+        // actualDelivered: editData.actualDelivered,
       },
     },
   });
@@ -126,7 +130,6 @@ export const EditModal = ({
         setSubmitDataTwo,
         setSubmitDataThree,
         setReceivingId,
-        receivingId,
       }}
     >
       <Flex>
@@ -310,7 +313,7 @@ export const EditModal = ({
                     <FormLabel w="40%" fontSize="12px">
                       Qty Actual Delivered
                       <Input
-                        {...register("submitData.actualdelivered")}
+                        {...register("submitData.actualDelivered")}
                         fontSize="11px"
                         size="sm"
                         placeholder="Please enter quantity (Required)"

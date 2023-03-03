@@ -116,8 +116,9 @@ const PrintBarcode = ({
             Re-Print
           </Button>
           <Button
-            color="black"
-            colorScheme="gray"
+            color="white"
+            bg="gray.500"
+            _hover={{ bg: "gray.600" }}
             onClick={() => {
               onClose();
               closeModal();

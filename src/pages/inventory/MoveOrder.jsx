@@ -8,9 +8,12 @@ import {
 } from "@chakra-ui/react";
 import { ListofApprovedDate, ListOfApprovedDate } from "./ListOfApprovedDate";
 import { usePagination } from "@ajna/pagination";
-// import { SaveButton } from './moveorder/Action-Modals'
 import { ToastComponent } from "../../components/Toast";
 import request from "../../services/ApiClient";
+import { ListOfOrders } from "./ListOfOrders";
+import { ActualItemQuantity } from "./ActualItemQuantity";
+import { SaveButton } from "./ActionModal";
+import { PreparedItem } from "./PreparedItem";
 
 //Pagination
 const fetchMoveOrderApi = async (pageNumber) => {
@@ -202,8 +205,8 @@ const MoveOrder = () => {
   }, [orderListData]);
 
   return (
-    <Flex bg="form" w="full">
-      <VStack w="full" p={4} spacing={6}>
+    <>
+      <VStack color="fontColor" w="full" p={4} bg="form" boxShadow="md">
         <ListofApprovedDate
           customerName={customerName}
           moveData={moveData}
@@ -222,23 +225,27 @@ const MoveOrder = () => {
           lengthIndicator={lengthIndicator}
           preparedLength={preparedData?.length}
         />
-        {/* {
-        orderId ?
-          <ListofOrders
+        {orderId ? (
+          <ListOfOrders
             orderListData={orderListData}
             setItemCode={setItemCode}
-            highlighterId={highlighterId} setHighlighterId={setHighlighterId}
-            setQtyOrdered={setQtyOrdered} setPreparedQty={setPreparedQty}
+            highlighterId={highlighterId}
+            setHighlighterId={setHighlighterId}
+            setQtyOrdered={setQtyOrdered}
+            setPreparedQty={setPreparedQty}
             setWarehouseId={setWarehouseId}
           />
-          : ''
-      }
-      {
-        buttonChanger ?
+        ) : (
+          ""
+        )}
+        {buttonChanger ? (
           <SaveButton
-            deliveryStatus={deliveryStatus}
-            batchNumber={batchNumber}
+            orderId={orderId}
+            // deliveryStatus={deliveryStatus}
+            // batchNumber={batchNumber}
             orderListData={orderListData}
+            fetchMoveOrder={fetchMoveOrder}
+            fetchPreparedItems={fetchPreparedItems}
             fetchApprovedMoveOrders={fetchApprovedMoveOrders}
             fetchOrderList={fetchOrderList}
             setOrderId={setOrderId}
@@ -248,33 +255,37 @@ const MoveOrder = () => {
             setButtonChanger={setButtonChanger}
             setCurrentPage={setCurrentPage}
             currentPage={currentPage}
-            fetchNotification={fetchNotification}
+            // fetchNotification={fetchNotification}
           />
-          :
-          itemCode && highlighterId &&
-          <ActualItemQuantity
-            setWarehouseId={setWarehouseId}
-            warehouseId={warehouseId}
-            barcodeData={barcodeData}
-            orderId={orderId}
-            highlighterId={highlighterId}
-            itemCode={itemCode} 
-            fetchOrderList={fetchOrderList} fetchPreparedItems={fetchPreparedItems}
-            qtyOrdered={qtyOrdered} preparedQty={preparedQty}
-            setHighlighterId={setHighlighterId} setItemCode={setItemCode}
-            nearlyExpireBarcode={nearlyExpireBarcode}
+        ) : (
+          itemCode &&
+          highlighterId && (
+            <ActualItemQuantity
+              setWarehouseId={setWarehouseId}
+              warehouseId={warehouseId}
+              barcodeData={barcodeData}
+              orderId={orderId}
+              highlighterId={highlighterId}
+              itemCode={itemCode}
+              fetchOrderList={fetchOrderList}
+              fetchPreparedItems={fetchPreparedItems}
+              qtyOrdered={qtyOrdered}
+              preparedQty={preparedQty}
+              setHighlighterId={setHighlighterId}
+              setItemCode={setItemCode}
+              nearlyExpireBarcode={nearlyExpireBarcode}
+            />
+          )
+        )}
+        {preparedData.length > 0 && (
+          <PreparedItem
+            preparedData={preparedData}
+            fetchPreparedItems={fetchPreparedItems}
+            fetchOrderList={fetchOrderList}
           />
-      }
-      {
-        preparedData.length > 0 &&
-        <PreparedItems
-          preparedData={preparedData}
-          fetchPreparedItems={fetchPreparedItems}
-          fetchOrderList={fetchOrderList}
-        />
-      } */}
+        )}
       </VStack>
-    </Flex>
+    </>
   );
 };
 

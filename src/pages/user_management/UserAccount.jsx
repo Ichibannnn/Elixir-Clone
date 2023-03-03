@@ -558,6 +558,7 @@ const DrawerComponent = (props) => {
   }, []);
 
   const submitHandler = async (data) => {
+    // console.log(first)
     try {
       if (data.formData.id === "") {
         delete data.formData["id"];

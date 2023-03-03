@@ -48,7 +48,11 @@ import PreparationSchedule from "./pages/ordering/preparation_schedule/Preparati
 import ApprovalPage from "./pages/ordering/approval/ApprovalPage";
 import CalendarPage from "./pages/ordering/calendar/CalendarPage";
 import InventoryPage from "./InventoryPage";
+import MoveOrderPage from "./MoveOrderPage";
 import MoveOrder from "./pages/inventory/MoveOrder";
+import ForApprovalMo from "./pages/move_order/forapprovalmo/ForApprovalMo";
+import MrpPage from "./pages/inventory/mrp/MrpPage";
+import ApprovedMoPage from "./pages/move_order/approvedmo/ApprovedMoPage";
 
 const App = () => {
   const [menu, setMenu] = useState(null);
@@ -159,7 +163,20 @@ const App = () => {
 
             {/* INVENTORY */}
             <Route path="/inventory" element={<InventoryPage />}>
-              <Route path="/inventory/move-order" element={<MoveOrder />} />
+              <Route path="/inventory/mrp" element={<MrpPage />} />
+            </Route>
+
+            {/* MOVE ORDER */}
+            <Route path="/move-order" element={<MoveOrderPage />}>
+              <Route path="/move-order/mo-issue" element={<MoveOrder />} />
+              <Route
+                path="/move-order/forapprovalmo"
+                element={<ForApprovalMo />}
+              />
+              <Route
+                path="/move-order/approved-mo"
+                element={<ApprovedMoPage />}
+              />
             </Route>
 
             <Route path="*" element={<ErrorPage />} />
