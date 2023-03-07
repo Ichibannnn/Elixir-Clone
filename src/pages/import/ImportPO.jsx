@@ -85,12 +85,22 @@ const ImportPO = () => {
     const initialWorkSheet = workbook.Sheets[workbook.SheetNames[0]];
     const jsonData = XLSX.utils.sheet_to_json(initialWorkSheet);
 
+    const isColumnComplete = jsonData.every((item) => {
+     return Object.keys(item).length === 12
+    })
+    
+
+    // console.log(isColumnComplete)
+
     fileRender(jsonData);
-    if (e) {
+    if (isColumnComplete) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
+      ToastComponent("Error!", "Please check empty fields", "error", toast);
     }
+
+    // console.log(jsonData)
   };
 
   const resultArray = excelData.map((item) => {
@@ -114,7 +124,7 @@ const ImportPO = () => {
     };
   });
 
-  // console.log(resultArray);
+  console.log(resultArray);
 
   const submitExcelHandler = (resultArray) => {
     Swal.fire({
@@ -172,6 +182,13 @@ const ImportPO = () => {
     });
   };
 
+  const stringValidation = (data) => {
+    if (data === isNaN ) {
+      setIsDisabled(true)
+      ToastComponent("Please check empty fields", "success", toast)
+    }
+  }
+
   const openErrorModal = () => {
     onErrorOpen();
   };
@@ -189,6 +206,21 @@ const ImportPO = () => {
 
   //   console.log(jsonData);
   // }
+
+  const actualDeliveredProvider = (data) => {
+
+    if (data = isNaN) {
+      setIsDisabled(true);
+      ToastComponent(
+        "Warning!",
+        "Amount is greater than allowable",
+        "warning",
+        toast
+      );
+    } else {
+      setIsDisabled(false);
+    }
+  };
 
   return (
     <Flex bg="form" w="full" boxShadow="md" flexDirection="column">
@@ -303,7 +335,10 @@ const ImportPO = () => {
                         </Text>
                       )}
                     </Td>
-                    <Td fontSize="11px">
+                    <Td fontSize="11px" onChange={(e) =>
+                          actualDeliveredProvider(e.target.value)
+                        }
+                    >
                       {eData.pO_Number ? (
                         eData.pO_Number
                       ) : (
@@ -343,24 +378,30 @@ const ImportPO = () => {
                         </Text>
                       )}
                     </Td>
-                    <Td fontSize="11px">
-                      {eData.ordered ? (
+                    <Td fontSize="11px" 
+                    // onChange={(e) => {
+                    //   stringValidation(e.target.value)
+                    // }}
+                    >
+                    {
+                      !isNaN(eData.ordered) ? eData.ordered : `${eData.ordered} is not a number`
+                    }
+                      {/* {eData.ordered ? (
                         eData.ordered
                       ) : (
-                        <Text fontWeight="semibold" color="danger">
+                        <Text fontWeight="semibold" color="red">
                           Data missing. Please make sure correct excel file for
                           PO is uploaded.
                         </Text>
-                      )}
+                      )} */}
                     </Td>
                     <Td fontSize="11px">
-                      {eData.delivered < 0 ? (
-                        <Text fontWeight="semibold" color="danger">
-                          Data missing. Please make sure correct excel file for
-                          PO is uploaded.
-                        </Text>
-                      ) : (
+                      {eData.delivered ? (
                         eData.delivered
+                      ) : (
+                        <Text fontWeight="semibold" color="red">
+                          Empty field
+                        </Text>
                       )}
                     </Td>
                     <Td fontSize="11px">

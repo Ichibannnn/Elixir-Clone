@@ -27,7 +27,7 @@ import {
   } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import request from '../../services/ApiClient'
-import { BsBookmarkDashFill, BsBookmarkPlusFill, BsFillBookmarkDashFill } from 'react-icons/bs'
+import { BsBookmarkDashFill, BsBookmarkPlusFill } from 'react-icons/bs'
 import { ToastComponent } from '../../components/Toast'
 
 const DrawerTaggingComponent = ({isOpen, onClose, taggingData, onOpen}) => {

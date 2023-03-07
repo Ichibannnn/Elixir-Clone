@@ -77,6 +77,8 @@ import moment from "moment";
 import Barcode from "react-barcode";
 import { useReactToPrint } from "react-to-print";
 
+
+// RECEIVED MATERIALS ----------------------------------------------
 const ReceivedMaterials = () => {
   // const [pO, setWarehouseData] = useState([]);
   const [warehouseData, setWarehouseData] = useState([]);
@@ -92,6 +94,7 @@ const ReceivedMaterials = () => {
     warehouseId: "",
     itemCode: "",
     itemDescription: "",
+    dateReceive: "",
   });
 
   // OPEN MODAL FOR PRINTER
@@ -162,12 +165,13 @@ const ReceivedMaterials = () => {
   };
 
   // PRINT
-  const printHandler = ({ id, itemCode, itemDescription }) => {
+  const printHandler = ({ id, itemCode, itemDescription, dateReceive }) => {
     if (id) {
       setPrintData({
         warehouseId: id,
         itemCode: itemCode,
         itemDescription: itemDescription,
+        dateReceive: dateReceive,
       });
       openPrint();
     } else {
@@ -175,6 +179,7 @@ const ReceivedMaterials = () => {
         warehouseId: "",
         itemCode: "",
         itemDescription: "",
+        dateReceive: "",
       });
     }
   };
@@ -191,10 +196,10 @@ const ReceivedMaterials = () => {
       flexDirection="column"
       bg="background"
     >
-      <Flex bg="btnColor" borderRadius="10px 10px 0px 0px" w="20%" pl={2}>
+      <Flex bg="btnColor" borderRadius="none" w="20%" pl={2}  >
         {/* <Icon as={BsTrashFill} mt={2} color="white" fontSize="18px" /> */}
-        <Text p={2} fontWeight="semibold" fontSize="12px" color="white">
-          Received Materials
+        <Text p={2} fontWeight="semibold" fontSize="11px" color="white" letterSpacing="wider">
+          RECEIVED MATERIALS
         </Text>
       </Flex>
 
@@ -204,6 +209,7 @@ const ReceivedMaterials = () => {
         h="100%"
         borderRadius="md"
         flexDirection="column"
+        p={4}
       >
         <Flex w="full" borderRadius="md" bg="form" h="6%" position="sticky">
           <HStack p={2} w="20%" mt={3}>
@@ -252,19 +258,22 @@ const ReceivedMaterials = () => {
               >
                 <Thead bg="primary">
                   <Tr>
-                    <Th color="white" fontSize="9px">
+                    <Th color="white" fontSize="10px">
                       Warehouse ID
                     </Th>
-                    <Th color="white" fontSize="9px">
+                    <Th color="white" fontSize="10px">
                       Item Code
                     </Th>
-                    <Th color="white" fontSize="9px">
+                    <Th color="white" fontSize="10px">
                       Item Description
                     </Th>
-                    <Th color="white" fontSize="9px">
+                    <Th color="white" fontSize="10px">
                       Actual Good
                     </Th>
-                    <Th color="white" fontSize="9px">
+                    <Th color="white" fontSize="10px">
+                      Date Received
+                    </Th>
+                    <Th color="white" fontSize="10px">
                       Print
                     </Th>
                   </Tr>
@@ -276,14 +285,16 @@ const ReceivedMaterials = () => {
                       <Td fontSize="11px">{items.itemCode}</Td>
                       <Td fontSize="11px">{items.itemDescription}</Td>
                       <Td fontSize="11px">{items.actualGood}</Td>
+                      <Td fontSize="11px">{items.dateReceive}</Td>
                       <Td pl={0}>
                         <Flex>
-                          <Box>
+                          <Box pl={4}>
                             <Button
+                              size="xs"
                               bg="none"
                               onClick={() => printHandler(items)}
                             >
-                              <BsFillPrinterFill />
+                              <BsFillPrinterFill fontSize="16px" />
                             </Button>
                           </Box>
                         </Flex>
@@ -390,6 +401,7 @@ const PrintModal = ({ isOpen, onClose, printData }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={() => {}} isCentered size="xl">
+      <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           <Flex justifyContent="center">
@@ -400,6 +412,7 @@ const PrintModal = ({ isOpen, onClose, printData }) => {
           <VStack spacing={0} justifyContent="center" ref={componentRef}>
             <Text>{printData?.itemCode}</Text>
             <Text>{printData?.itemDescription}</Text>
+            <Text>Date Received: {printData?.dateReceive}</Text>
             <VStack spacing={0} w="90%" ml={4} justifyContent="center">
               <Barcode width={2} height={30} value={printData?.warehouseId} />
             </VStack>
@@ -410,7 +423,7 @@ const PrintModal = ({ isOpen, onClose, printData }) => {
             <Button colorScheme="blue" onClick={handlePrint}>
               Print
             </Button>
-            <Button variant="ghost" onClick={onClose}>
+            <Button colorScheme="blackAlpha" onClick={onClose}>
               Close
             </Button>
           </ButtonGroup>

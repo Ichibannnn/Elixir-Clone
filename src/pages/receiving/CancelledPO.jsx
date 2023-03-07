@@ -1,7 +1,6 @@
 import {
   Box,
   Flex,
-  Heading,
   HStack,
   Input,
   InputGroup,
@@ -14,34 +13,17 @@ import {
   Th,
   Thead,
   Tr,
-  VStack,
   useDisclosure,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverArrow,
-  PopoverCloseButton,
   Td,
-  Portal,
   Button,
   useToast,
-  Icon,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuGroup,
-  MenuDivider,
-  MenuItem,
-  IconButton,
   ModalOverlay,
   Modal,
   ModalContent,
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  Tfoot,
+
   ModalFooter,
   Badge,
   Select,
@@ -50,19 +32,8 @@ import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { useEffect } from "react";
 import { TiArrowBack } from "react-icons/ti";
-import { GiCancel } from "react-icons/gi";
-import { GrView } from "react-icons/gr";
-import { AiOutlineMore } from "react-icons/ai";
-import { useForm } from "react-hook-form";
-import { AiTwotoneEdit } from "react-icons/ai";
-import { BsTrashFill } from "react-icons/bs";
-import { FaSearch } from "react-icons/fa";
-import { MdLibraryAdd } from "react-icons/md";
 import PageScroll from "../../utils/PageScroll";
 import request from "../../services/ApiClient";
-import { ToastComponent } from "../../components/Toast";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { decodeUser } from "../../services/decode-user";
 import {
   Pagination,
   usePagination,
@@ -164,11 +135,6 @@ const CancelledPO = () => {
   //FOR DRAWER (Drawer / Drawer Tagging)
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // const viewModalHandler = (poNumber, poDate, prNumber, prDate) => {
-  //   setViewData({ poNumber, poDate, prNumber, prDate });
-  //   openViewModal();
-  // };
-  // console.log(viewData)
 
   const returnModalHandler = (data) => {
     setEditData(data);
@@ -184,10 +150,9 @@ const CancelledPO = () => {
       flexDirection="column"
       bg="background"
     >
-      <Flex bg="btnColor" borderRadius="10px 10px 0px 0px" w="20%" pl={2}>
-        {/* <Icon as={BsTrashFill} mt={2} color="white" fontSize="18px" /> */}
-        <Text p={2} fontWeight="semibold" fontSize="12px" color="white">
-          Cancelled PO
+      <Flex bg="btnColor" borderRadius="none" w="20%" pl={2}>
+        <Text p={2} fontWeight="semibold" fontSize="12px" color="white" letterSpacing="wider">
+          CANCELLED PURCHASE ORDER
         </Text>
       </Flex>
 
@@ -195,6 +160,7 @@ const CancelledPO = () => {
         w="full"
         bg="form"
         h="100%"
+        p={4}
         borderRadius="md"
         flexDirection="column"
       >
@@ -260,12 +226,12 @@ const CancelledPO = () => {
                     <Th color="white" fontSize="9px">
                       Qty Ordered
                     </Th>
-                    <Th color="white" fontSize="9px">
+                    {/* <Th color="white" fontSize="9px">
                       Qty Cancel
                     </Th>
                     <Th color="white" fontSize="9px">
                       Qty Good
-                    </Th>
+                    </Th> */}
                     <Th color="white" fontSize="9px">
                       Date Cancelled
                     </Th>
@@ -285,9 +251,7 @@ const CancelledPO = () => {
                       <Td fontSize="11px">{canc.itemDescription}</Td>
                       <Td fontSize="11px">{canc.supplier}</Td>
                       <Td fontSize="11px">{canc.quantityOrdered}</Td>
-                      <Td>{/* QTY CANCEL */}</Td>
-                      <Td fontSize="11px">{/* QTY GOOD */}</Td>
-                      <Td fontSize="11px">{canc.dateCancelled}</Td>
+                      <Td fontSize="11px">{moment(canc.dateCancelled).format("MM/DD/YYYY")}</Td>
                       <Td fontSize="11px">{canc.remarks}</Td>
                       <Td pl={0}>
                         <Flex>

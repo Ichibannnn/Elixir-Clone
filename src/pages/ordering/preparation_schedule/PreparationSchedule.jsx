@@ -78,7 +78,7 @@ const PrepartionSchedule = () => {
       h="auto"
       w="full"
       flexDirection="column"
-      p={2}
+      p={4}
       bg="form"
       boxShadow="md"
     >

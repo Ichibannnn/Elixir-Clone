@@ -82,7 +82,7 @@ const CancelModal = ({ isOpen, onClose, getAvailablePOHandler, poId }) => {
         <ModalContent>
           <ModalHeader bg="primary" color="white">
             <Flex justifyContent="left">
-              <Text fontSize="15px">Cancel Materials</Text>
+              <Text fontSize="sm">Cancel Materials</Text>
             </Flex>
           </ModalHeader>
 
@@ -90,11 +90,12 @@ const CancelModal = ({ isOpen, onClose, getAvailablePOHandler, poId }) => {
 
           <ModalBody>
             <Flex justifyContent="center" p={2} flexDirection="column">
-              <Text fontSize="15px">
+              <Text fontSize="sm">
                 Are you sure to cancel this materials?
               </Text>
               {reasons.length > 0 ? (
                 <Select
+                fontSize="xs"
                   onChange={(e) => reasonHandler(e.target.value)}
                   placeholder="Select Reason"
                 >

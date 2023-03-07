@@ -14,7 +14,6 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
   Select,
   Skeleton,
   Stack,
@@ -42,7 +41,6 @@ import React, { useState, useRef } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AiTwotoneEdit } from "react-icons/ai";
-import { GiChoice } from "react-icons/gi";
 import { FiSearch } from "react-icons/fi";
 import { RiAddFill } from "react-icons/ri";
 import PageScroll from "../../utils/PageScroll";
@@ -60,7 +58,6 @@ import {
   PaginationContainer,
   PaginationPageGroup,
 } from "@ajna/pagination";
-import { BsCheckLg } from "react-icons/bs";
 
 const MaterialsManagement = () => {
   const [materials, setMaterials] = useState([]);

@@ -1,12 +1,10 @@
-import { Flex, HStack, Icon, Image, Text, Menu, MenuButton, MenuList, MenuItem, MenuItemOption, MenuGroup, MenuOptionGroup, MenuDivider, Box,} from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Flex, HStack, Text, Menu, MenuButton, MenuList, MenuItem, MenuDivider, Box, MenuGroup,} from "@chakra-ui/react";
 import { RiLogoutBoxLine, RiUser3Fill } from "react-icons/ri";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { decodeUser } from "../services/decode-user";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+
 
 const Header = ({ setSidebarHandler }) => {
   const user = decodeUser();

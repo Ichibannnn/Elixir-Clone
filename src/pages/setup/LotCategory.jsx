@@ -41,7 +41,6 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AiTwotoneEdit } from "react-icons/ai";
-import { GiChoice } from "react-icons/gi";
 import { FiSearch } from "react-icons/fi";
 import { RiAddFill } from "react-icons/ri";
 import PageScroll from "../../utils/PageScroll";
@@ -459,7 +458,7 @@ const schema = yup.object().shape({
 const currentUser = decodeUser();
 
 const DrawerComponent = (props) => {
-  const { isOpen, onClose, getLotCategoryHandler, editData, disableEdit } =
+  const { isOpen, onClose, getLotCategoryHandler, editData } =
     props;
   const toast = useToast();
 

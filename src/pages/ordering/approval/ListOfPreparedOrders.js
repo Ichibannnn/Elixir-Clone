@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 import moment from "moment";
-import PageScrollImport from "../../../components/PageScrollImport";
+import PageScroll from "../../../utils/PageScroll";
 
 export const ListOfPreparedOrders = ({ orders, orderNo, setOrderNo }) => {
   const orderNoHandler = (id) => {
@@ -36,7 +36,7 @@ export const ListOfPreparedOrders = ({ orders, orderNo, setOrderNo }) => {
         >
           List of Prepared Date
         </Text>
-        <PageScrollImport>
+        <PageScroll minHeight="200px" maxHeight="210px">
           <Table size="sm" variant="simple">
             <Thead bgColor="secondary">
               <Tr>
@@ -84,7 +84,7 @@ export const ListOfPreparedOrders = ({ orders, orderNo, setOrderNo }) => {
               ))}
             </Tbody>
           </Table>
-        </PageScrollImport>
+        </PageScroll>
       </Flex>
     </Flex>
   );

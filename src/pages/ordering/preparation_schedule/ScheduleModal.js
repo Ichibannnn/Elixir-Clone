@@ -32,6 +32,8 @@ import moment from "moment";
 
 const currentUser = decodeUser();
 
+
+// SCHEDULE OF ORDERS
 export const ScheduleModal = ({
   isOpen,
   onClose,
@@ -409,22 +411,23 @@ export const CancelModalConfirmation = ({
 
   return (
     <Modal isCentered size="xl" isOpen={isOpen} onClose={() => {}}>
+      <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
-          <Flex justifyContent="center" mt={10}>
-            <BsFillQuestionOctagonFill fontSize="50px" />
-          </Flex>
-        </ModalHeader>
+          <ModalHeader bg="primary" color="white">
+            <Flex justifyContent="left">
+              <Text fontSize="15px">Cancel Order</Text>
+            </Flex>
+          </ModalHeader>
         <ModalCloseButton onClick={onClose} />
         <ModalBody>
-          <VStack justifyContent="center" mb={8}>
+          <VStack justifyContent="center" mt={4} mb={7}>
             <Text>Are you sure you want to cancel this order?</Text>
             {reasons.length > 0 ? (
               <Select
                 onChange={(e) => remarksHandler(e.target.value)}
                 placeholder="Please select a reason"
                 w="65%"
-                bgColor="#fff8dc"
+                // bgColor="#fff8dc"
               >
                 {reasons?.map((item, i) => (
                   <option key={i} value={item.reasonName}>

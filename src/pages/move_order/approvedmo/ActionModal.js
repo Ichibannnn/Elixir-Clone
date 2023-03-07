@@ -24,21 +24,19 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-// import apiClient from '../../../services/apiClient'
-// import { ToastComponent } from '../../../components/Toast'
-// import { decodeUser } from '../../../services/decode-user'
-// import '../../../theme/styles/stylesheets/stepper.css'
 import "../../../styles/Tracking.css";
-// import PageScrollReusable from '../../../components/PageScroll-Reusable'
 import { useReactToPrint } from "react-to-print";
 import Barcode from "react-barcode";
 import moment from "moment";
 import request from "../../../services/ApiClient";
 import { decodeUser } from "../../../services/decode-user";
 import PageScroll from "../../../utils/PageScroll";
+import { ToastComponent } from "../../../components/Toast";
 
 const currentUser = decodeUser();
 
+
+// PRINT MODAL --------------------------------------
 export const PrintModal = ({
   isOpen,
   onClose,
@@ -81,6 +79,8 @@ export const PrintModal = ({
     }
   };
 
+  console.log(printData)
+
   return (
     <Modal isOpen={isOpen} onClose={() => {}} isCentered size="5xl">
       <ModalOverlay />
@@ -115,10 +115,10 @@ export const PrintModal = ({
             <Flex justifyContent="space-between" mb={3}>
               <Flex flexDirection="column">
                 <Text>Order ID: {orderId && orderId}</Text>
-                <Text>Warehouse: {`Warehouse`}</Text>
+                <Text>Unit: {`Warehouse`}</Text>
                 <Text>Customer: {printData[0]?.customerName}</Text>
-                <Text>Address: {printData[0]?.customercode}</Text>
-                {/* <Text>Batch Number: {printData[0]?.batchNo}</Text> */}
+                <Text>Address: {printData[0]?.address}</Text>
+                {/* <Text>Batch Number: {printData[0]?.batchNo}</Text> */}  
               </Flex>
               <Flex flexDirection="column">
                 <Barcode width={3} height={50} value={Number(orderId)} />
@@ -226,7 +226,7 @@ export const PrintModal = ({
           <Box display="none">
             <PageScroll minHeight="150px" maxHeight="300px">
               <VStack spacing={20} w="93%" ml={3} ref={componentRef}>
-                {/* Survey Form */}
+                {/* Survey Form Ready to print*/}
                 <Flex w="full" mb="500px" p={5} flexDirection="column">
                   <HStack w="full" border="1px">
                     <Image src="/images/RDF Logo.png" w="18%" ml={3} />
@@ -474,7 +474,9 @@ export const PrintModal = ({
                     </Text>
                   </Flex>
                 </Flex>
-                {/* MO SLIP Print*/}
+
+
+                {/* MO SLIP Ready to print*/}
                 <Flex w="full" mt={2} p={5} flexDirection="column">
                   <Flex
                     spacing={0}
@@ -505,7 +507,7 @@ export const PrintModal = ({
                       <Text>Order ID: {orderId && orderId}</Text>
                       <Text>Warehouse: {`Warehouse`}</Text>
                       <Text>Customer: {printData[0]?.customerName}</Text>
-                      <Text>Address: {printData[0]?.customercode}</Text>
+                      <Text>Address: {printData[0]?.address}</Text>
                       {/* <Text>Batch Number: {printData[0]?.batchNo}</Text> */}
                     </Flex>
                     <Flex flexDirection="column">
@@ -555,7 +557,7 @@ export const PrintModal = ({
                       <Text textDecoration="underline">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        {printData[0]?.deliveryStatus}
+                        {`Pick-Up`}
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -646,6 +648,8 @@ export const PrintModal = ({
   );
 };
 
+
+// TRACKING OF ORDERS -------------------------------
 export const TrackModal = ({ isOpen, onClose, trackData, trackList }) => {
   const TableHead = [
     "Line",
@@ -657,6 +661,7 @@ export const TrackModal = ({ isOpen, onClose, trackData, trackList }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={() => {}} isCentered size="5xl">
+      <ModalOverlay />
       <ModalContent>
         <ModalHeader>
           <Flex justifyContent="center"></Flex>
@@ -728,7 +733,7 @@ export const TrackModal = ({ isOpen, onClose, trackData, trackList }) => {
                 <Thead bgColor="primary">
                   <Tr>
                     {TableHead?.map((head, i) => (
-                      <Th color="white" key={i}>
+                      <Th color="white" key={i} fontSize="10px">
                         {head}
                       </Th>
                     ))}
@@ -737,11 +742,11 @@ export const TrackModal = ({ isOpen, onClose, trackData, trackList }) => {
                 <Tbody>
                   {trackList?.map((item, i) => (
                     <Tr key={i}>
-                      <Td>{i + 1}</Td>
-                      <Td>{item.barcodeNo}</Td>
-                      <Td>{item.itemCode}</Td>
-                      <Td>{item.itemDescription}</Td>
-                      <Td>{item.quantity}</Td>
+                      <Td fontSize="11px">{i + 1}</Td>
+                      <Td fontSize="11px">{item.barcodeNo}</Td>
+                      <Td fontSize="11px">{item.itemCode}</Td>
+                      <Td fontSize="11px">{item.itemDescription}</Td>
+                      <Td fontSize="11px">{item.quantity}</Td>
                       {/* <Td>{moment(item.expiration).format("MM/DD/yyyy")}</Td> */}
                     </Tr>
                   ))}
@@ -753,7 +758,7 @@ export const TrackModal = ({ isOpen, onClose, trackData, trackList }) => {
 
         <ModalFooter>
           <ButtonGroup size="sm" mt={7}>
-            <Button colorScheme="blackAlpha" onClick={onClose}>
+            <Button colorScheme="blackAlpha" onClick={onClose} borderRadius="none" fontSize="11px">
               Close
             </Button>
           </ButtonGroup>
@@ -762,3 +767,115 @@ export const TrackModal = ({ isOpen, onClose, trackData, trackList }) => {
     </Modal>
   );
 };
+
+
+//REJECT APPROVED MO --------------------------------
+export const RejectModal = ({ isOpen, onClose, id, fetchApprovedMO, fetchNotification }) => {
+
+  const [reasonSubmit, setReasonSubmit] = useState('')
+
+  const [reasons, setReasons] = useState([])
+
+  const toast = useToast()
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const fetchReasonsApi = async () => {
+      const res = await request.get(`Reason/GetAllActiveReasons`)
+      return res.data
+  }
+
+  const fetchReasons = () => {
+      fetchReasonsApi().then(res => {
+          setReasons(res)
+      })
+  }
+
+  useEffect(() => {
+      fetchReasons()
+
+      return () => {
+          setReasons([])
+      }
+  }, [])
+
+  const submitHandler = () => {
+      setIsLoading(true)
+      try {
+          const res = request.put(`Ordering/RejectApproveListOfMoveOrder`,
+              {
+                  orderNo: id,
+                  remarks: reasonSubmit,
+                  rejectBy: currentUser?.userName
+              }
+          )
+              .then(res => {
+                  ToastComponent("Success", "Move order has been rejected", "success", toast)
+                  // fetchNotification()
+                  fetchApprovedMO()
+                  setIsLoading(false)
+                  onClose()
+              })
+              .catch(err => {
+                  ToastComponent("Error", "Move order was not rejected", "error", toast)
+                  setIsLoading(false)
+              })
+      } catch (error) {
+      }
+  }
+
+  return (
+      <Modal isOpen={isOpen} onClose={() => { }} isCentered size='xl'>
+          <ModalOverlay />
+          <ModalContent>
+              <ModalHeader bg="primary" color="white">
+                  <Flex justifyContent='center'>
+                      <Text fontSize="14px">Reject Move Order</Text>
+                  </Flex>
+              </ModalHeader>
+              <ModalCloseButton onClick={onClose} />
+
+              <ModalBody>
+                  <VStack justifyContent='center'>
+                      <Text fontSize="sm" mt={2}>Are you sure you want to reject this move order?</Text>
+                      {
+                          reasons?.length > 0 ?
+                              <Select
+                                  fontSize="xs"
+                                  onChange={(e) => setReasonSubmit(e.target.value)}
+                                  w='70%' placeholder='Please select a reason'
+                              >
+                                  {
+                                      reasons?.map((reason, i) =>
+                                          <option key={i} value={reason.reasonName}>{reason.reasonName}</option>
+                                      )
+                                  }
+                              </Select>
+                              : 'loading'
+                      }
+                  </VStack>
+              </ModalBody>
+
+              <ModalFooter justifyContent="center">
+                  <ButtonGroup size='sm' mt={7}>
+                      <Button
+                          onClick={submitHandler}
+                          disabled={!reasonSubmit || isLoading}
+                          isLoading={isLoading}
+                          colorScheme='blue'
+                      >
+                          Yes
+                      </Button>
+                      <Button
+                          disabled={isLoading}
+                          isLoading={isLoading}
+                          colorScheme='blackAlpha' onClick={onClose}
+                      >
+                          No
+                      </Button>
+                  </ButtonGroup>
+              </ModalFooter>
+          </ModalContent>
+      </Modal>
+  )
+}

@@ -46,7 +46,7 @@ const PrintBarcode = ({
 
   const displayData = {
     Date: moment().format("MM/DD/YYYY, h:mm:ss a"),
-    "Receiving Id": receivingId,
+    // "Receiving Id": receivingId,
     "Item Code": printData.itemCode,
     "Item Description": printData.itemDescription,
     UOM: printData.uom,
@@ -54,6 +54,8 @@ const PrintBarcode = ({
     "Quantity Good": actualDelivered,
     "Receiving Date": moment(receivingDate).format("MM/DD/YYYY"),
   };
+
+  console.log(displayData)
 
   return (
     <Modal isOpen={isOpen} onClose={() => {}} isCentered size="sm">

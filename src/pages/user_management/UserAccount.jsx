@@ -36,22 +36,13 @@ import {
   PopoverCloseButton,
   VStack,
   Portal,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogCloseButton,
-  AlertDialogOverlay,
   Image,
-  Switch,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AiTwotoneEdit } from "react-icons/ai";
 import { FiSearch } from "react-icons/fi";
-import { GiChoice } from "react-icons/gi";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { RiAddFill } from "react-icons/ri";
 import PageScroll from "../../utils/PageScroll";
@@ -93,12 +84,6 @@ const UserAccount = () => {
 
   //FOR DRAWER
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onAlertClose,
-  } = useDisclosure();
-  const cancelRef = useRef();
 
   //PAGINATION
   const outerLimit = 2;
@@ -513,7 +498,6 @@ const DrawerComponent = (props) => {
     handleSubmit,
     formState: { errors, isValid },
     setValue,
-    watch,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",

@@ -17,7 +17,7 @@ import CryptoJS from 'crypto-js'
 //Toast
 import { ToastComponent } from './Toast'
 import { saltKey } from '../saltkey'
-import { decodeUser } from '../services/decode-user'
+
 
 const Login = () => {
   var [username, setUsername] = useState('')
@@ -25,7 +25,7 @@ const Login = () => {
   var navigate = useNavigate()
   var [Loader, setLoader] = useState(false)
   const toast = useToast()
-  const user = decodeUser()
+  // const user = decodeUser()
 
   const submitHandler = async (event, user) => {
     event.preventDefault()

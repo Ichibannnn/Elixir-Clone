@@ -32,9 +32,9 @@ export const ListOfOrders = ({
     "Line",
     "Order Date",
     "Date Needed",
-    "Customer Code",
-    "Customer Name",
-    "Category",
+    // "Customer Code",
+    // "Customer Name",
+    // "Category",
     "Item Code",
     "Item Description",
     "UOM",
@@ -103,9 +103,9 @@ export const ListOfOrders = ({
                 <Td fontSize="11px">
                   {moment(list.dateNeeded).format("yyyy-MM-DD")}
                 </Td>
-                <Td fontSize="11px">{list.customerCode}</Td>
+                {/* <Td fontSize="11px">{list.customerCode}</Td>
                 <Td fontSize="11px">{list.customerName}</Td>
-                <Td fontSize="11px">{list.category}</Td>
+                <Td fontSize="11px">{list.category}</Td> */}
                 <Td fontSize="11px">{list.itemCode}</Td>
                 <Td fontSize="11px">{list.itemDescription}</Td>
                 <Td fontSize="11px">{list.uom}</Td>

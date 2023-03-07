@@ -87,19 +87,20 @@ const CancelledReturnModal = ({
     <Modal isOpen={isOpen} onClose={() => {}} isCentered size="md">
       <ModalOverlay />
       <ModalContent color="white" justifyContent="center">
-        <ModalHeader fontSize="17px" bg="primary">
-          <Flex justifyContent="center">
-            <Text>Cancel PO</Text>
+        <ModalHeader fontSize="sm" bg="primary">
+          <Flex justifyContent="left">
+            <Text fontSize="sm">Cancel PO</Text>
           </Flex>
         </ModalHeader>
         <ModalCloseButton onClick={onClose} />
         <ModalBody>
           <VStack justifyContent="center">
-            <Text color="#000">
+            <Text color="#000" fontSize="sm">
               Are you sure you want to return this raw material?
             </Text>
             {reasons.length > 0 ? (
               <Select
+                fontSize="sm"
                 onChange={(e) => reasonHandler(e.target.value)}
                 placeholder="Select a reason"
                 w="60%"

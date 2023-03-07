@@ -119,15 +119,17 @@ export const ForApprovalMoveOrder = ({
   return (
     <Flex w="full" flexDirection="column" p={5} bg="form">
       <Flex justifyContent="space-between">
-        <Select onChange={handlePageSizeChange} w="7%" variant="filled">
+        <Select onChange={handlePageSizeChange} w="7%" variant="filled" fontSize="11px" borderColor="gray.400">
           <option value={Number(10)}>10</option>
           <option value={Number(20)}>20</option>
           <option value={Number(30)}>30</option>
           <option value={Number(50)}>50</option>
         </Select>
         <HStack w="17%">
-          <Text>Search:</Text>
+          <Text fontSize="13px">Search:</Text>
           <Input
+            borderColor="gray.400"  
+            fontSize="11px"
             placeholder="Order Id"
             onChange={(e) => searchHandler(e.target.value)}
           />

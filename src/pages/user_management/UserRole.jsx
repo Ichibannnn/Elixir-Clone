@@ -41,10 +41,9 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AiTwotoneEdit } from "react-icons/ai";
-import { FaSearch, FaUserTag } from "react-icons/fa";
+import { FaUserTag } from "react-icons/fa";
 import { RiAddFill } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
-import { GiChoice } from "react-icons/gi";
 import PageScroll from "../../utils/PageScroll";
 import request from "../../services/ApiClient";
 import { ToastComponent } from "../../components/Toast";
@@ -516,7 +515,6 @@ const DrawerComponent = (props) => {
     handleSubmit,
     formState: { errors, isValid },
     setValue,
-    watch,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",

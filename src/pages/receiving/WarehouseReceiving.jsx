@@ -194,9 +194,9 @@ const WarehouseReceiving = () => {
       flexDirection="column"
       bg="background"
     >
-      <Flex bg="btnColor" borderRadius="10px 10px 0px 0px" w="19%" pl={2}>
-        <Text p={2} fontWeight="semibold" fontSize="12px" color="white">
-          Purchase Order Summary List
+      <Flex bg="btnColor" borderRadius="none" w="20%" pl={2}>
+        <Text p={2} fontWeight="semibold" fontSize="11px" color="white" letterSpacing="wider">
+          PURCHASE ORDER SUMMARY LIST
         </Text>
       </Flex>
 
@@ -206,6 +206,7 @@ const WarehouseReceiving = () => {
         h="100%"
         borderRadius="md"
         flexDirection="column"
+        p={4}
       >
         <Flex w="full" borderRadius="md" bg="form" h="6%" position="sticky">
           <HStack p={2} w="30%" mt={3}>
@@ -278,9 +279,9 @@ const WarehouseReceiving = () => {
                     <Th color="white" fontSize="9px">
                       Actual Remaining
                     </Th>
-                    <Th color="white" fontSize="9px">
+                    {/* <Th color="white" fontSize="9px">
                       Total Reject
-                    </Th>
+                    </Th> */}
                     <Th color="white" fontSize="9px">
                       Action
                     </Th>
@@ -312,9 +313,9 @@ const WarehouseReceiving = () => {
                           minimumFractionDigits: 2,
                         })}
                       </Td>
-                      <Td fontSize="11px">{pos.totalReject}</Td>
+                      {/* <Td fontSize="11px" >{pos.totalReject}</Td> */}
                       <Td ml={3}>
-                        <Flex>
+                        <Flex pl={2}>
                           <Box>
                             <Menu>
                               <MenuButton

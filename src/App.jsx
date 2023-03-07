@@ -1,4 +1,4 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 

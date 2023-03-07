@@ -1,7 +1,6 @@
 import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
-import MainContainer from '../components/MainContainer'
-import MainContent from '../components/MainContent'
+
 
 
 const ProtectedRoutes = () => {

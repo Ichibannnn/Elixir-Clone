@@ -126,7 +126,7 @@ const SidebarList = () => {
             </AccordionButton>
             {/* </Link> */}
             <AccordionPanel bgColor="secondary" p={2}>
-              <PageScroll minHeight="auto" maxHeight="200px">
+              <PageScroll minHeight="auto" maxHeight="160px">
                 {menu?.map((sub, i) => (
                   <Link to={sub.path} key={sub.path}>
                     <Box w="full" justifyContent="start" cursor="pointer">

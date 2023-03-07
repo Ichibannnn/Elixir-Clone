@@ -188,18 +188,18 @@ export const PreparationListOrders = ({
                 border="1px"
                 fontSize="xs"
                 px={2}
-                _hover={{ bg: "blue", color: "white" }}
+                _hover={{ bg: "btnColor", color: "white" }}
               >
                 {"< Previous"}
               </PaginationPrevious>
-              <Text mx={1} bgColor="secondary" color="white" px={2} pt={1.5}>
+              <Text mx={1} bgColor="primary" color="white" px={2} pt={1.5}>
                 {currentPage}
               </Text>
               <PaginationNext
                 border="1px"
                 fontSize="xs"
                 px={4}
-                _hover={{ bg: "blue", color: "white" }}
+                _hover={{ bg: "btnColor", color: "white" }}
               >
                 {"Next >"}
               </PaginationNext>

@@ -41,7 +41,6 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AiTwotoneEdit } from "react-icons/ai";
-import { GiChoice } from "react-icons/gi";
 import { FiSearch } from "react-icons/fi";
 import { RiAddFill } from "react-icons/ri";
 import PageScroll from "../../utils/PageScroll";
@@ -473,7 +472,6 @@ const DrawerComponent = (props) => {
     handleSubmit,
     formState: { errors, isValid },
     setValue,
-    watch,
   } = useForm({
     resolver: yupResolver(schema),
     mode: "onChange",

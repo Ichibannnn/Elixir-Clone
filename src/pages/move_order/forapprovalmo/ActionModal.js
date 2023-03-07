@@ -597,6 +597,8 @@ export const ApproveModal = ({
                 </Text>
               </Flex>
             </Flex>
+
+            
             {/* MO Slip */}
             <Flex
               w="full"
@@ -622,9 +624,9 @@ export const ApproveModal = ({
               <Flex justifyContent="space-between" mb={3}>
                 <Flex flexDirection="column">
                   <Text>Order ID: {orderNo && orderNo}</Text>
-                  <Text>Warehouse: {`Warehouse`}</Text>
+                  <Text>Unit: {`Warehouse`}</Text>
                   <Text>Customer: {printData[0]?.customerName}</Text>
-                  <Text>Address: {printData[0]?.customercode}</Text>
+                  <Text>Address: {printData[0]?.address}</Text>
                   {/* <Text>Batch Number: {printData[0]?.batchNo}</Text> */}
                 </Flex>
                 <Flex flexDirection="column">
@@ -641,7 +643,7 @@ export const ApproveModal = ({
                     <Th color="white">UOM</Th>
                     <Th color="white">QUANTITY</Th>
                     <Th color="white">ACTUAL QTY RECEIVED</Th>
-                    <Th color="white">EXPIRATION DATE</Th>
+                    {/* <Th color="white">EXPIRATION DATE</Th> */}
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -652,7 +654,7 @@ export const ApproveModal = ({
                       <Td>{item.uom}</Td>
                       <Td>{item.quantity}</Td>
                       <Td></Td>
-                      <Td>{moment(item.expiration).format("MM/DD/yyyy")}</Td>
+                      {/* <Td>{moment(item.expiration).format("MM/DD/yyyy")}</Td> */}
                     </Tr>
                   ))}
                 </Tbody>

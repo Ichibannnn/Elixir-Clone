@@ -15,8 +15,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import PageScrollImport from "../../../components/PageScrollImport";
 import { ApproveModal, RejectModal } from "./ActionModal";
+import PageScroll from "../../../utils/PageScroll";
 
 export const ListOfOrders = ({
   customerOrders,
@@ -57,7 +57,7 @@ export const ListOfOrders = ({
         >
           List of Orders
         </Text>
-        <PageScrollImport>
+        <PageScroll minHeight='260px' maxHeight='270px'>
           <Table size="sm" variant="simple">
             <Thead bgColor="secondary">
               <Tr>
@@ -70,7 +70,7 @@ export const ListOfOrders = ({
                 <Th color="white" fontSize="9px">
                   Date Needed
                 </Th>
-                <Th color="white" fontSize="9px">
+                {/* <Th color="white" fontSize="9px">
                   Customer Code
                 </Th>
                 <Th color="white" fontSize="9px">
@@ -78,7 +78,7 @@ export const ListOfOrders = ({
                 </Th>
                 <Th color="white" fontSize="9px">
                   Category
-                </Th>
+                </Th> */}
                 <Th color="white" fontSize="9px">
                   Item Code
                 </Th>
@@ -100,9 +100,9 @@ export const ListOfOrders = ({
                     <Td fontSize="11px">{i + 1}</Td>
                     <Td fontSize="11px">{item.orderDate}</Td>
                     <Td fontSize="11px">{item.dateNeeded}</Td>
-                    <Td fontSize="11px">{item.customerCode}</Td>
+                    {/* <Td fontSize="11px">{item.customerCode}</Td>
                     <Td fontSize="11px">{item.customerName}</Td>
-                    <Td fontSize="11px">{item.category}</Td>
+                    <Td fontSize="11px">{item.category}</Td> */}
                     <Td fontSize="11px">{item.itemCode}</Td>
                     <Td fontSize="11px">{item.itemDescription}</Td>
                     <Td fontSize="11px">{item.uom}</Td>
@@ -113,7 +113,7 @@ export const ListOfOrders = ({
               </Tbody>
             ) : null}
           </Table>
-        </PageScrollImport>
+        </PageScroll>
       </Flex>
 
       <Flex justifyContent="end">

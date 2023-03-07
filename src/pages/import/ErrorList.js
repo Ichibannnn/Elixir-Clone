@@ -175,11 +175,51 @@ const ErrorList = ({ isOpen, onClose, errorData }) => {
                                                         <Tbody>
                                                             {duplicate?.map((d, i) =>
                                                                 <Tr key={i}>
+                                                                    <Td color="gray.600" fontSize="11px">
                                                                     {/* <Td>{ }</Td> */}
-                                                                    <Td color="gray.600" fontSize="11px">{d?.pR_Number}</Td>
-                                                                    <Td color="gray.600" fontSize="11px">{d?.pR_Date}</Td>
-                                                                    <Td color="gray.600" fontSize="11px">{d?.pO_Number}</Td>
-                                                                    <Td color="gray.600" fontSize="11px">{d?.pO_Date}</Td>
+                                                                    {
+                                                                       d?.pR_Number === 0 ? (
+                                                                        <Text fontWeight="semibold" color="danger">
+                                                                            Empty field
+                                                                        </Text>
+                                                                       ) : (
+                                                                        d?.pR_Number   
+                                                                       )
+                                                                    }
+                                                                    </Td>
+                                                                    <Td color="gray.600" fontSize="11px">
+                                                                    {
+                                                                       d?.pR_Date === 0 ? (
+                                                                        <Text fontWeight="semibold" color="danger">
+                                                                            Empty field
+                                                                        </Text>
+                                                                       ) : (
+                                                                        d?.pR_Date  
+                                                                       )
+                                                                    }  
+                                                                    </Td>
+                                                                    <Td color="gray.600" fontSize="11px">
+                                                                    {
+                                                                       d?.pO_Number === 0 ? (
+                                                                        <Text fontWeight="semibold" color="danger">
+                                                                            Empty field
+                                                                        </Text>
+                                                                       ) : (
+                                                                        d?.pO_Number
+                                                                       )
+                                                                    }  
+                                                                    </Td>
+                                                                    <Td color="gray.600" fontSize="11px">
+                                                                    {
+                                                                       d?.pO_Date === 0 ? (
+                                                                        <Text fontWeight="semibold" color="danger">
+                                                                            Empty field
+                                                                        </Text>
+                                                                       ) : (
+                                                                        d?.pO_Date
+                                                                       )
+                                                                    }  
+                                                                    </Td>
                                                                     <Td color="gray.600" fontSize="11px">{d?.item_Code}</Td>
                                                                     <Td color="gray.600" fontSize="11px">{d?.item_Description}</Td>
                                                                     <Td color="gray.600" fontSize="11px">{d?.ordered}</Td>

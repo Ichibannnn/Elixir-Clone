@@ -27,7 +27,7 @@ import {
 } from "@ajna/pagination";
 import moment from "moment";
 import { ImLocation } from "react-icons/im";
-import { PrintModal, TrackModal } from "./ActionModal";
+import { PrintModal, RejectModal, TrackModal } from "./ActionModal";
 
 export const ApproveMoveOrder = ({
   setCurrentPage,
@@ -152,15 +152,18 @@ export const ApproveMoveOrder = ({
   return (
     <Flex w="full" flexDirection="column" p={5} bg="form">
       <Flex justifyContent="space-between">
-        <Select onChange={handlePageSizeChange} w="7%" variant="filled">
+        <Select onChange={handlePageSizeChange} w="7%" variant="filled" fontSize="11px" borderColor="gray.400">
           <option value={Number(10)}>10</option>
           <option value={Number(20)}>20</option>
           <option value={Number(30)}>30</option>
           <option value={Number(50)}>50</option>
         </Select>
         <HStack w="17%">
-          <Text>Search:</Text>
+          <Text fontSize="13px">Search:</Text>
           <Input
+            borderColor="gray.400"  
+            fontSize="11px"
+            borderRadius="none"
             placeholder="Order Id"
             onChange={(e) => searchHandler(e.target.value)}
           />
@@ -190,8 +193,6 @@ export const ApproveMoveOrder = ({
                   <Td fontSize="11px">
                     {moment(order.preparedDate).format("MM/DD/yyyy")}
                   </Td>
-                  {/* <Td>{moment(order.dateNeeded).format("MM/DD/yyyy")}</Td> */}
-                  {/* <Td>{moment(order.approvedDate).format("MM/DD/yyyy")}</Td> */}
                   <Td>
                     <Button
                       size="xs"
@@ -199,7 +200,7 @@ export const ApproveMoveOrder = ({
                       bgColor="white"
                       onClick={() => trackHandler(order)}
                     >
-                      <ImLocation color="#314E89" fontSize="21px" />
+                      <ImLocation color="#314E89" fontSize="19px" />
                     </Button>
                   </Td>
                   <Td>
@@ -300,17 +301,17 @@ export const ApproveMoveOrder = ({
         />
       )}
 
-      {/* {
-                isReject && (
-                    <RejectModal
-                        isOpen={isReject}
-                        onClose={closeReject}
-                        id={orderId}
-                        fetchApprovedMO={fetchApprovedMO}
-                        fetchNotification={fetchNotification}
-                    />
-                )
-            } */}
+      {
+        isReject && (
+        <RejectModal
+          isOpen={isReject}
+          onClose={closeReject}
+          id={orderId}
+          fetchApprovedMO={fetchApprovedMO}
+            // fetchNotification={fetchNotification}
+        />
+        )
+      }
     </Flex>
   );
 };

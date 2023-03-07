@@ -94,8 +94,8 @@ export const EditModal = ({
   };
 
   const actualDeliveredProvider = (data) => {
-    const allowablePercent = editData.quantityOrdered * 0.1;
-    const allowableAmount = editData.actualRemaining + allowablePercent;
+    const allowablePercent = editData.quantityOrdered * 1.10;
+    const allowableAmount =  allowablePercent - editData.actualGood;
     if (data > allowableAmount) {
       setActualDelivered("");
       ToastComponent(
