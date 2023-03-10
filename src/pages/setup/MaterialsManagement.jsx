@@ -177,7 +177,7 @@ const MaterialsManagement = () => {
     setDisableEdit(true);
     setEditData(materials);
     onOpen();
-    // console.log(mod.mainMenu)
+    console.log(materials)
   };
 
   //FOR DRAWER (Drawer / Drawer Tagging)
@@ -535,6 +535,7 @@ const DrawerComponent = (props) => {
     try {
       const res = await request.get("Material/GetAllActiveSubcategoryDropDown");
       setSubCategory(res.data);
+      // console.log(res.data)
     } catch (error) {}
   };
 
@@ -556,13 +557,13 @@ const DrawerComponent = (props) => {
   const categoryCategoryStatusHandler = (data) => {
     const newData = JSON.parse(data);
     if (data) {
-      setValue("formData.subCategoryId", newData.subCategoryId);
+      // setValue("formData.subCategoryId", newData.subCategoryId);
       setValue("formData.itemCategoryName", newData.categoryName);
     } else {
-      setValue("formData.subCategoryId", "");
+      // setValue("formData.subCategoryId", "");
       setValue("formData.itemCategoryName", "");
     }
-    console.log(newData);
+    // console.log(newData);
   };
 
   // useEffect(() => {
@@ -575,6 +576,7 @@ const DrawerComponent = (props) => {
         `Material/GetAllSubcategoriesmaterial?category=${itemCategoryName}`
       );
       setCategoryData(res.data);
+      console.log(res.data)
     } catch (error) {}
   };
 
@@ -583,6 +585,12 @@ const DrawerComponent = (props) => {
       fetchItemCat();
     } catch (error) {}
   }, [itemCategoryName]);
+
+  // useEffect(() => {
+  //   try {
+  //     fetchItemCat();
+  //   } catch (error) {}
+  // }, [watch("formData.subCategoryId")]);
 
   const fetchUom = async () => {
     try {
@@ -598,7 +606,7 @@ const DrawerComponent = (props) => {
   }, []);
 
   const submitHandler = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       if (data.formData.id === "") {
         delete data.formData["id"];
@@ -647,7 +655,9 @@ const DrawerComponent = (props) => {
           itemCode: editData?.itemCode,
           itemDescription: editData?.itemDescription,
           subCategoryId: editData?.subCategoryId,
-
+          subCategoryName: editData?.subcategoryName,
+          itemCategoryId: editData?.itemCategoryId,
+          itemCategoryName: editData?.categoryName,
           uomId: editData?.uomId,
           bufferLevel: editData?.bufferLevel,
           modifiedBy: currentUser.userName,
@@ -655,9 +665,10 @@ const DrawerComponent = (props) => {
         { shouldValidate: true }
       );
     }
+    // console.log(editData);
   }, [editData]);
 
-  console.log(watch("formData"));
+  // console.log(watch("formData"));
 
   return (
     <>
@@ -700,7 +711,7 @@ const DrawerComponent = (props) => {
 
                 <Flex mt={3}></Flex>
 
-                <Box>
+                {/* <Box>
                   <FormLabel>Item Sub Category:</FormLabel>
                   {subCategory.length > 0 ? (
                     <Select
@@ -710,6 +721,28 @@ const DrawerComponent = (props) => {
                     >
                       {subCategory.map((subCat, i) => (
                         <option key={i} value={JSON.stringify(subCat)}>
+                          {subCat.subcategoryName}
+                        </option>
+                      ))}
+                    </Select>
+                  ) : (
+                    "loading"
+                  )}
+                  <Text color="red" fontSize="xs">
+                    {errors.formData?.subCategoryId?.message}
+                  </Text>
+                </Box> */}
+
+                <Box>
+                  <FormLabel>Item Sub Category:</FormLabel>
+                  {subCategory.length > 0 ? (
+                    <Select
+                      // {...register("formData.subCategoryId")}
+                      placeholder="Select Sub Category"
+                      onChange={(e) => categoryStatusHandler(e.target.value)}
+                    >
+                      {subCategory.map((subCat, i) => (
+                        <option key={i} value={subCat.id}>
                           {subCat.subcategoryName}
                         </option>
                       ))}
@@ -735,7 +768,7 @@ const DrawerComponent = (props) => {
                     >
                       {categoryData.map((itemCat, i) => (
                         <option key={i} value={JSON.stringify(itemCat)}>
-                          {itemCat.categoryName}
+                          {itemCat.itemCategoryName}
                         </option>
                       ))}
                     </Select>

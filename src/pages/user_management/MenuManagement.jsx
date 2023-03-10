@@ -133,6 +133,7 @@ const MenuManagement = () => {
       })
       .catch((err) => {
         console.log(err);
+        ToastComponent("Error", err.response.data, "error", toast);
       });
     // console.log(routeLabel)
   };

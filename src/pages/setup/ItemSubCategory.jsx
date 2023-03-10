@@ -273,7 +273,7 @@ const ItemSubCategory = () => {
                   <Tbody>
                     {subCategory?.category?.map((subcat, i) => (
                       <Tr key={i}>
-                        <Td fontSize="11px">{subcat.subcategoryId}</Td>
+                        <Td fontSize="11px">{subcat.id}</Td>
                         <Td fontSize="11px">{subcat.categoryName}</Td>
                         <Td fontSize="11px">{subcat.subcategoryName}</Td>
                         <Td fontSize="11px">{subcat.addedBy}</Td>
@@ -337,7 +337,7 @@ const ItemSubCategory = () => {
                                               size="sm"
                                               onClick={() =>
                                                 changeStatusHandler(
-                                                  subcat.subcategoryId,
+                                                  subcat.id,
                                                   subcat.isActive
                                                 )
                                               }
@@ -457,7 +457,7 @@ export default ItemSubCategory;
 
 const schema = yup.object().shape({
   formData: yup.object().shape({
-    subcategoryId: yup.string(),
+    id: yup.string(),
     itemCategoryId: yup.string().required("Item Category name is required"),
     subcategoryName: yup.string().required("Sub Category name is required"),
   }),
@@ -545,11 +545,11 @@ const DrawerComponent = (props) => {
   };
 
   useEffect(() => {
-    if (editData.subcategoryId) {
+    if (editData.id) {
       setValue(
         "formData",
         {
-          id: editData.subcategoryId,
+          id: editData.id,
           itemCategoryId: editData?.itemCategoryId,
           subcategoryName: editData?.subcategoryName,
           modifiedBy: currentUser.userName,
@@ -557,7 +557,7 @@ const DrawerComponent = (props) => {
         { shouldValidate: true }
       );
     }
-    console.log(editData);
+    // console.log(editData);
   }, [editData]);
 
   // console.log(watch('formData'))

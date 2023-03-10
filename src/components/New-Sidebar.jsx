@@ -85,7 +85,7 @@ const SidebarList = () => {
       setTagModules(unique);
     });
 
-    console.log(tagModules);
+    // console.log(tagModules);
   };
 
   useEffect(() => {

@@ -284,7 +284,7 @@ const ReceivedMaterials = () => {
                       <Td fontSize="11px">{items.id}</Td>
                       <Td fontSize="11px">{items.itemCode}</Td>
                       <Td fontSize="11px">{items.itemDescription}</Td>
-                      <Td fontSize="11px">{items.actualGood}</Td>
+                      <Td fontSize="11px">{items.actualGood.toLocaleString(undefined, {maximumFractionDigits: 2, minumFractionDigits: 2})}</Td>
                       <Td fontSize="11px">{items.dateReceive}</Td>
                       <Td pl={0}>
                         <Flex>

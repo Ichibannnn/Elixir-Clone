@@ -47,6 +47,8 @@ import moment from "moment";
 import { EditModal } from "./warehouse_receiving/EditModal";
 import CancelledReturnModal from "./warehouse_receiving/CancelledReturnModal";
 
+
+
 const CancelledPO = () => {
   const [pO, setPO] = useState([]);
   const [editData, setEditData] = useState([]);
@@ -224,7 +226,7 @@ const CancelledPO = () => {
                       Supplier
                     </Th>
                     <Th color="white" fontSize="9px">
-                      Qty Ordered
+                      Qty Remaining
                     </Th>
                     {/* <Th color="white" fontSize="9px">
                       Qty Cancel
@@ -235,9 +237,9 @@ const CancelledPO = () => {
                     <Th color="white" fontSize="9px">
                       Date Cancelled
                     </Th>
-                    <Th color="white" fontSize="9px">
+                    {/* <Th color="white" fontSize="9px">
                       Remarks
-                    </Th>
+                    </Th> */}
                     <Th color="white" fontSize="9px">
                       Return
                     </Th>
@@ -250,9 +252,9 @@ const CancelledPO = () => {
                       <Td fontSize="11px">{canc.itemCode}</Td>
                       <Td fontSize="11px">{canc.itemDescription}</Td>
                       <Td fontSize="11px">{canc.supplier}</Td>
-                      <Td fontSize="11px">{canc.quantityOrdered}</Td>
+                      <Td fontSize="11px">{canc.actualRemaining.toLocaleString(undefined, {maximumFractionDigits: 2, minimumFractionDigits: 2})}</Td>
                       <Td fontSize="11px">{moment(canc.dateCancelled).format("MM/DD/YYYY")}</Td>
-                      <Td fontSize="11px">{canc.remarks}</Td>
+                      {/* <Td fontSize="11px">{canc.remarks}</Td> */}
                       <Td pl={0}>
                         <Flex>
                           <Box>

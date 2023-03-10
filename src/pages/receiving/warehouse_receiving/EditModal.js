@@ -25,8 +25,14 @@ import { decodeUser } from "../../../services/decode-user";
 import EditAddRejectionModal from "./EditAddRejectionModal";
 import { ReceivingContext } from "../../../components/context/ReceivingContext";
 import EditModalSave from "./EditModalSave";
+import request from "../../../services/ApiClient";
 
 const currentUser = decodeUser();
+
+const fetchLotCategoryApi = async () => {
+  const res = await request.get('Lot/GetAllLotCategories')
+  return res.data
+}
 
 export const EditModal = ({
   editData,
@@ -45,6 +51,9 @@ export const EditModal = ({
 
   const [submitDataThree, setSubmitDataThree] = useState([]);
   const [submitDataTwo, setSubmitDataTwo] = useState([]);
+  const [lotCategory, setLotCategory] = useState([])
+
+  // const fetchLotCategory 
 
   const { register } = useForm({
     resolver: yupResolver(),
@@ -340,6 +349,31 @@ export const EditModal = ({
                     </FormLabel>
                     <FormLabel w="40%" fontSize="12px">
                       Batch No.
+                      <Input
+                        fontSize="11px"
+                        size="sm"
+                        placeholder="Please provide batch number (Required)"
+                        bgColor="yellow.50"
+                        onChange={(e) => batchNoProvider(e.target.value)}
+                      />
+                    </FormLabel>
+                  </Flex>
+
+                  <Flex justifyContent="space-between" p={1}>
+                    <FormLabel w="40%" fontSize="12px">
+                      Lot Name
+                      <Input
+                        {...register("displayData.actualRemaining")}
+                        disabled={true}
+                        readOnly={true}
+                        _disabled={{ color: "black" }}
+                        fontSize="11px"
+                        size="sm"
+                        bg="gray.300"
+                      />
+                    </FormLabel>
+                    <FormLabel w="40%" fontSize="12px">
+                      Receiving Date
                       <Input
                         fontSize="11px"
                         size="sm"

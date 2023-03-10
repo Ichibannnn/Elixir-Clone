@@ -53,6 +53,8 @@ import MoveOrder from "./pages/inventory/MoveOrder";
 import ForApprovalMo from "./pages/move_order/forapprovalmo/ForApprovalMo";
 import MrpPage from "./pages/inventory/mrp/MrpPage";
 import ApprovedMoPage from "./pages/move_order/approvedmo/ApprovedMoPage";
+import RejectMoveOrder from "./pages/move_order/reject_moveorder/RejectMoveOrder";
+import TransactMoveOrderPage from "./pages/move_order/transact_moveorder/TransactMoveOrderPage";
 
 const App = () => {
   const [menu, setMenu] = useState(null);
@@ -176,6 +178,14 @@ const App = () => {
               <Route
                 path="/move-order/approved-mo"
                 element={<ApprovedMoPage />}
+              />
+              <Route
+                path="/move-order/reject-mo"
+                element={<RejectMoveOrder />}
+              />
+              <Route
+                path="/move-order/transact-moveorder"
+                element={<TransactMoveOrderPage />}
               />
             </Route>
 
