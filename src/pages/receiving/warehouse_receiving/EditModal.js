@@ -10,11 +10,12 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 // import request from '../../../services/ApiClient'
@@ -26,11 +27,12 @@ import EditAddRejectionModal from "./EditAddRejectionModal";
 import { ReceivingContext } from "../../../components/context/ReceivingContext";
 import EditModalSave from "./EditModalSave";
 import request from "../../../services/ApiClient";
+import DatePicker from "react-date-picker";
 
 const currentUser = decodeUser();
 
 const fetchLotCategoryApi = async () => {
-  const res = await request.get('Lot/GetAllLotCategories')
+  const res = await request.get('Lot/GetAllActiveLotCategories')
   return res.data
 }
 
@@ -39,6 +41,10 @@ export const EditModal = ({
   isOpen,
   onClose,
   getAvailablePOHandler,
+  setReceivingDate, 
+  setLotCategory,
+  lotCategory, 
+  receivingDate
 }) => {
   const [actualDelivered, setActualDelivered] = useState(null);
   const [batchNo, setBatchNo] = useState(null);
@@ -51,9 +57,20 @@ export const EditModal = ({
 
   const [submitDataThree, setSubmitDataThree] = useState([]);
   const [submitDataTwo, setSubmitDataTwo] = useState([]);
-  const [lotCategory, setLotCategory] = useState([])
+  const [lotCategories, setLotCategories] = useState([])
+  const [receivingDateDisplay, setReceivingDateDisplay] = useState(null)
 
-  // const fetchLotCategory 
+
+  // FETCH LOT CATEGORY
+    const fetchLotCategory = async () => {
+      fetchLotCategoryApi().then(res => {
+          setLotCategories(res)
+      })
+    }
+
+    useEffect(() => {
+        fetchLotCategory()
+    }, [setLotCategories])
 
   const { register } = useForm({
     resolver: yupResolver(),
@@ -131,6 +148,17 @@ export const EditModal = ({
     batchNo: batchNo,
     totalReject: sumQuantity,
   };
+
+  const receivingDateProvider = (data) => {
+    if (data) {
+        setReceivingDateDisplay(data)
+        const newData = moment(data).format("YYYY-MM-DD")
+        setReceivingDate(newData)
+    } else {
+        setReceivingDateDisplay(null)
+        setReceivingDate(null)
+    }
+}
 
   return (
     <ReceivingContext.Provider
@@ -313,7 +341,7 @@ export const EditModal = ({
                         fontSize="11px"
                         size="sm"
                         placeholder="Please provide quantity of expected delivery  (Required)"
-                        bgColor="yellow.50"
+                        bgColor='#ffffe0'
                         onChange={(e) =>
                           expectedDeliveryProvider(e.target.value)
                         }
@@ -326,7 +354,7 @@ export const EditModal = ({
                         fontSize="11px"
                         size="sm"
                         placeholder="Please enter quantity (Required)"
-                        bgColor="yellow.50"
+                        bgColor='#ffffe0'
                         onChange={(e) =>
                           actualDeliveredProvider(e.target.value)
                         }
@@ -353,34 +381,54 @@ export const EditModal = ({
                         fontSize="11px"
                         size="sm"
                         placeholder="Please provide batch number (Required)"
-                        bgColor="yellow.50"
+                        bgColor='#ffffe0'
                         onChange={(e) => batchNoProvider(e.target.value)}
                       />
                     </FormLabel>
                   </Flex>
 
                   <Flex justifyContent="space-between" p={1}>
-                    <FormLabel w="40%" fontSize="12px">
-                      Lot Name
-                      <Input
-                        {...register("displayData.actualRemaining")}
-                        disabled={true}
-                        readOnly={true}
-                        _disabled={{ color: "black" }}
-                        fontSize="11px"
-                        size="sm"
-                        bg="gray.300"
-                      />
-                    </FormLabel>
-                    <FormLabel w="40%" fontSize="12px">
-                      Receiving Date
-                      <Input
-                        fontSize="11px"
-                        size="sm"
-                        placeholder="Please provide batch number (Required)"
-                        bgColor="yellow.50"
-                        onChange={(e) => batchNoProvider(e.target.value)}
-                      />
+
+
+                    <FormLabel w='40%' fontSize="12px">
+                        Receiving Date
+                        <Input
+                            size="sm"
+                            border="1px"
+                            borderColor="gray.400"
+                            fontSize="11px"
+                            bgColor='#ffffe0'
+                            onChange={(date) => receivingDateProvider(date)}
+                            min={new Date(new Date().setDate(new Date().getDate() - 3))}
+                            max={new Date()}
+                            type='date'
+                            
+                            // shouldCloseOnSelect
+                            // selected={receivingDateDisplay}
+                            // className='chakra-input css-7s3glp'
+                            // wrapperClassName='datePicker'
+                        />
+                      </FormLabel>
+
+                      <FormLabel w='40%' fontSize="12px">
+                        LOT Name
+                        {
+                          lotCategories.length > 0 ?
+                              (<Select
+                                  size="sm"
+                                  fontSize="11px"
+                                  onChange={(e) => setLotCategory(e.target.value)}
+                                  disabled={!receivingDate}
+                                  title={!receivingDate ? 'Please provide a Receiving Date first' : 'Select a lot category'}
+                                  // isInvalid={errors.rms}
+                                  placeholder='Select Lot Category'
+                                  bgColor='#ffffe0'
+                              >
+                                  {lotCategories?.map(lot =>
+                                      <option key={lot.id} value={lot.lotCategoryName}>{lot.lotCategoryName}</option>
+                                  )}
+                              </Select>) : "Loading"
+                        }
                     </FormLabel>
                   </Flex>
                 </Stack>
@@ -418,6 +466,8 @@ export const EditModal = ({
                 isSubmitDisabled={isSubmitDisabled}
                 closeModal={onClose}
                 editData={editData}
+                receivingDate={receivingDate}
+                lotCategory={lotCategory}
               />
             </ModalFooter>
           </ModalContent>

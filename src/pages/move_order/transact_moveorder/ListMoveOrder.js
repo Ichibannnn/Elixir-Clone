@@ -36,8 +36,8 @@ export const ListMoveOrder = ({ moveOrderList, setMoveOrderInformation, moveOrde
       return {
         orderNo: item.orderNo,
         // farmType: item.farmType,
-        farmName: item.customerName,
-        farmCode: item.customerCode,
+        customerName: item.customerName,
+        customerCode: item.customerCode,
         orderNoPKey: item.orderNoPKey,
         isApprove: item.isApproved,
         preparedBy: currentUser?.userName
@@ -78,7 +78,7 @@ export const ListMoveOrder = ({ moveOrderList, setMoveOrderInformation, moveOrde
       <Flex w='full' flexDirection='column'>
         <VStack spacing={0}>
           <Text pb={2} textAlign='center' fontSize='md' color='white' bgColor='primary' w='full' mb={-1.5}>List of Move Order</Text>
-          <PageScroll minHeight='440px' maxHeight='460px'>
+          <PageScroll minHeight='600px' maxHeight='620px'>
             <Table size='sm' variant='simple'>
               <Thead bgColor='secondary' >
                 <Tr>

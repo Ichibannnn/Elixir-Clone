@@ -52,6 +52,7 @@ const PrintBarcode = ({
     UOM: printData.uom,
     Supplier: printData.supplier,
     "Quantity Good": actualDelivered,
+    "Total Reject": printData.totalReject,
     "Receiving Date": moment(receivingDate).format("MM/DD/YYYY"),
   };
 

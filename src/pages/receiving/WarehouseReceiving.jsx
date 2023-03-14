@@ -88,6 +88,9 @@ const WarehouseReceiving = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [pageTotal, setPageTotal] = useState(undefined);
   const [disableEdit, setDisableEdit] = useState(false);
+  const [receivingDate, setReceivingDate] = useState('')
+  const [lotCategory, setLotCategory] = useState("")
+  const [quantity, setQuantity] = useState("")
 
   const {
     isOpen: isViewModalOpen,
@@ -279,9 +282,9 @@ const WarehouseReceiving = () => {
                     <Th color="white" fontSize="9px">
                       Actual Remaining
                     </Th>
-                    {/* <Th color="white" fontSize="9px">
+                    <Th color="white" fontSize="9px">
                       Total Reject
-                    </Th> */}
+                    </Th>
                     <Th color="white" fontSize="9px">
                       Action
                     </Th>
@@ -313,7 +316,7 @@ const WarehouseReceiving = () => {
                           minimumFractionDigits: 2,
                         })}
                       </Td>
-                      {/* <Td fontSize="11px" >{pos.totalReject}</Td> */}
+                      <Td fontSize="11px" >{pos.totalReject}</Td>
                       <Td ml={3}>
                         <Flex pl={2}>
                           <Box>
@@ -454,6 +457,8 @@ const WarehouseReceiving = () => {
                 onClose={closeEditModal}
                 editData={editData}
                 getAvailablePOHandler={getAvailablePOHandler}
+                setReceivingDate={setReceivingDate} receivingDate={receivingDate}
+                setLotCategory={setLotCategory} lotCategory={lotCategory}
               />
             )}
 

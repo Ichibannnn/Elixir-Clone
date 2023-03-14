@@ -38,6 +38,7 @@ const EditModalSave = ({
   actualGood,
   setCode,
   editData,
+  lotCategory
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
